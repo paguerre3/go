@@ -3,6 +3,7 @@ golang compendium
 
 ---
 **Why Go Modules Replace GOPATH:**
+
 Go modules use the `go.mod` file to manage dependencies for each project, and you can create Go projects anywhere in your file system, not just within the `GOPATH` directory.
 Each project is self-contained, meaning that each project has its own module file (`go.mod`) to manage its dependencies independently of other projects.
 
