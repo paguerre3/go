@@ -2,6 +2,16 @@
 golang compendium
 
 ---
+**Why Go?**
+
+- **Bult-In Concurrency Mechanism** that was **designed to run on multiple cores** and to support concurrency.
+- **Concurrency is cheap and easy** compared to other languages like C++ or Java.
+- For **Performant** applications and running on **scaled, distributed systems**.
+- E.g. *Docker and K8s* are written in GO.
+- Faster than interpreted languages like Python. 
+
+
+---
 **Why Go Modules Replace GOPATH:**
 
 Go modules use the `go.mod` file to manage dependencies for each project, and you can create Go projects anywhere in your file system, not just within the `GOPATH` directory.
@@ -36,3 +46,17 @@ Only need to set `GOPATH` in the following cases:
 | `go mod why`          | `go mod why package`                | Explains why a specific module is needed by your module.                        | `go mod why github.com/some/package`                                        |
 | `go mod vendor`       | `go mod vendor`                     | Creates a `vendor` directory with copies of all dependencies for offline builds. | `go mod vendor`                                                              |
 
+
+---
+**Module paths for downloadable packages**
+
+If you’re creating a project which can be downloaded and used by other people and programs, then it’s good practice for your module path to equal the location that the code can be downloaded from.
+
+For instance, if your package is hosted at https://github.com/foo/bar then the module path for the project should be github.com/foo/bar.
+
+
+---
+**Common Concepts:**
+
+- All code must belong to **packages**, i.e. all code is organized in **packages**. The first statement in a file should be a package declaration. **A package is a set of related source files** with their functions, e.g. `fmt`.
+- 
