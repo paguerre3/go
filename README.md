@@ -59,4 +59,6 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 **Common Concepts:**
 
 - All code must belong to **packages**, i.e. all code is organized in **packages**. The first statement in a file should be a package declaration. **A package is a set of related source files** with their functions, e.g. `fmt`.
+- **Variables** are used to store values and reuse/update values like *containers*. Variables are declared with the `var` keyword.
+- **Go Compile Errors to enforce better code quality**, e.g. leaving a `var` without a call/usage highlights an error (variables must be used) or trying to update a `const` value from 50 to 30.  
 - 
