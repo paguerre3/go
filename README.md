@@ -1,2 +1,2 @@
-# go
+# gocom
 golang compendium
