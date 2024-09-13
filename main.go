@@ -21,12 +21,15 @@ func main() {
 	fmt.Println("###Welcome to", conferenceName, "booking app.###")
 	fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d. Get your tickets now!\n", conferenceName, remainingTickets, soldTickets)
 
-	var userName string
+	var userName, userEmail string
 	var userTickets uint8
-	// ask user for their name:
+	fmt.Println("Enter your complete name: ")
 	fmt.Scan(&userName)
-	userTickets = 2
-	fmt.Printf("User %s booked %d tickets\n", userName, userTickets)
+	fmt.Println("Enter your email: ")
+	fmt.Scan(&userEmail)
+	fmt.Println("Enter the ammount of tickets to book: ")
+	fmt.Scan(&userTickets)
+	fmt.Printf("User %s booked %d tickets. Booking details are send to %s\n", userName, userTickets, userEmail)
 
 	// recalculate remaining tickets:
 	remainingTickets -= userTickets
