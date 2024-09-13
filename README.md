@@ -1,10 +1,10 @@
-# gocom
-golang compendium
+# Go compendium
+Go language compendium
 
 ---
 **Why Go?**
 
-- **Bult-In Concurrency Mechanism** that was **designed to run on multiple cores** and to support concurrency.
+- **Built-in Concurrency Mechanism** that was **designed to run on multiple cores** and to support concurrency.
 - **Concurrency is cheap and easy** compared to other languages like C++ or Java.
 - For **Performant** applications and running on **scaled, distributed systems**.
 - E.g. *Docker and K8s* are written in GO.
@@ -56,13 +56,13 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 
 
 ---
-**Common Concepts:**
+**Packages, Variables, and Constants:**
 
 - All code must belong to **packages**, i.e. all code is organized in **packages**. The first statement in a file should be a package declaration. **A package is a set of related source files** with their functions, e.g. [`fmt`](https://pkg.go.dev/fmt) and its functions to print in different formats like `Println` or `Printf` using printing verbs like `%v`, `%s`, `%d`, `%t`, etc.
 - **Variables** are used to store values and reuse/update values like *containers*. Variables are declared with the `var` keyword.
-- **Go Compile Errors to enforce better code quality**, e.g. leaving a `var` without a call/usage highlights an error (variables must be used) or trying to update a `const` value from 50 to 30.
-- ***Go is a Statically Typed** language, i.e. Go Compiler will throw an error if a variable is not declared with a type, this is called **Type Checking**, unless the type of the variable could be inferred from its assigned value during the declaration, e.g. `a := 10`, `var a = 10`, `var a int = 10` are valid declarations in Go but `var a // declaration without assignment and after few lines of code being assigned with a = 10` is an error.
-**Type Inference** is when Go compiler infers the type of variable based on the assigned value. ***Note `:=` can only be used in variables and NO to `const`***
+- **Go Compile Errors to enforce better code quality**, e.g. leaving a `var` without a call/usage highlights an error (variables must be used) or trying to update a `const` value from 50 to 30. 
+- **Go is a Statically Typed** language, i.e. Go Compiler will throw an error if a variable is not declared with a type, this is called **Type Checking**, unless the type of the variable could be inferred from its assigned value during the declaration, e.g. `a := 10`, `var a = 10`, `var a int = 10` are valid declarations in Go but `var a // declaration without assignment and after few lines of code being assigned with a = 10` is an error. 
+**Type Inference** is when Go compiler infers the type of variable based on the assigned value. *Note `:=` can only be used in variables and NO to `const`*
 
 
 ---
@@ -95,4 +95,21 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 | **pointer** | Holds the memory address of a value.         | `var ptr *int = &age`                    |
 | **interface** | Abstract type to represent any type.       | `var i interface{} = "hello"`            |
 | **function** | A function signature with parameters and return values. | `func add(a int, b int) int { return a + b }` |
+
+
+---
+**Pointers:**
+
+Variables are stored in memory but when we reference a variable we are actually pointing to its memory address, i.e.
+**a Pointer is a Variable that points to the Memory Address of another Variable** -*special variable* that holds the memory address of the other variable, e.g. printing a pointer returns the memory address of the variable pointed while printing a variable returns the actual value.
+
+![Pointer](./img/0-pointer.png?raw=true)
+
+```go
+fmt.Println("Pointer of soldTickets is", &soldTickets, "and its Variable value", soldTickets)	
+```	
+```text
+// output console
+Pointer of soldTickets is 0xc0000ac00b and its Variable value 20
+```
 
