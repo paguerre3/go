@@ -60,4 +60,39 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 
 - All code must belong to **packages**, i.e. all code is organized in **packages**. The first statement in a file should be a package declaration. **A package is a set of related source files** with their functions, e.g. [`fmt`](https://pkg.go.dev/fmt) and its functions to print in different formats like `Println` or `Printf` using printing verbs like `%v`, `%s`, `%d`, `%t`, etc.
 - **Variables** are used to store values and reuse/update values like *containers*. Variables are declared with the `var` keyword.
-- **Go Compile Errors to enforce better code quality**, e.g. leaving a `var` without a call/usage highlights an error (variables must be used) or trying to update a `const` value from 50 to 30.  
+- **Go Compile Errors to enforce better code quality**, e.g. leaving a `var` without a call/usage highlights an error (variables must be used) or trying to update a `const` value from 50 to 30.
+- ***Go is a Statically Typed** language, i.e. Go Compiler will throw an error if a variable is not declared with a type, this is called **Type Checking**, unless the type of the variable could be inferred from its assigned value during the declaration, e.g. `a := 10`, `var a = 10`, `var a int = 10` are valid declarations in Go but `var a // declaration without assignment and after few lines of code being assigned with a = 10` is an error.
+**Type Inference** is when Go compiler infers the type of variable based on the assigned value. ***Note `:=` can only be used in variables and NO to `const`***
+
+
+---
+**Data Types:**
+
+| Data Type   | Description                                  | Example                                  |
+|-------------|----------------------------------------------|------------------------------------------|
+| **bool**    | Represents a Boolean value (true or false).  | `var isActive bool = true`               |
+| **string**  | Sequence of characters.                      | `var name string = "GoLang"`             |
+| **int**     | Signed integer (size depends on platform).   | `var age int = 30`                       |
+| **int8**    | 8-bit signed integer (-128 to 127).          | `var smallNum int8 = -10`                |
+| **int16**   | 16-bit signed integer (-32,768 to 32,767).   | `var mediumNum int16 = 300`              |
+| **int32**   | 32-bit signed integer (-2^31 to 2^31-1).     | `var largeNum int32 = 100000`            |
+| **int64**   | 64-bit signed integer (-2^63 to 2^63-1).     | `var bigNum int64 = 100000000000`        |
+| **uint**    | Unsigned integer (size depends on platform). | `var index uint = 10`                    |
+| **uint8**   | 8-bit unsigned integer (0 to 255).           | `var byteVal uint8 = 255`                |
+| **uint16**  | 16-bit unsigned integer (0 to 65,535).       | `var smallIndex uint16 = 500`            |
+| **uint32**  | 32-bit unsigned integer (0 to 4,294,967,295).| `var mediumIndex uint32 = 100000`        |
+| **uint64**  | 64-bit unsigned integer (0 to 2^64-1).       | `var largeIndex uint64 = 1000000000`     |
+| **float32** | 32-bit floating-point number.                | `var price float32 = 9.99`               |
+| **float64** | 64-bit floating-point number.                | `var pi float64 = 3.14159`               |
+| **complex64** | Complex number with float32 real and imaginary parts. | `var c complex64 = 2 + 3i`      |
+| **complex128**| Complex number with float64 real and imaginary parts. | `var c complex128 = 2 + 3i`   |
+| **byte**    | Alias for `uint8`, represents a byte.        | `var b byte = 255`                       |
+| **rune**    | Alias for `int32`, represents a Unicode character. | `var char rune = 'A'`               |
+| **array**   | Fixed-size sequence of elements of the same type. | `var nums [3]int = [3]int{1, 2, 3}`   |
+| **slice**   | Dynamic-size sequence of elements of the same type. | `var nums []int = []int{1, 2, 3}`   |
+| **map**     | Key-value pairs, where keys and values can be of any type. | `var dict map[string]int = map[string]int{"a": 1}` |
+| **struct**  | Collection of fields.                        | `type Person struct { Name string; Age int }` |
+| **pointer** | Holds the memory address of a value.         | `var ptr *int = &age`                    |
+| **interface** | Abstract type to represent any type.       | `var i interface{} = "hello"`            |
+| **function** | A function signature with parameters and return values. | `func add(a int, b int) int { return a + b }` |
+
