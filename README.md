@@ -244,3 +244,37 @@ func main() {
 | **`len()` Result**  | Always returns the fixed size of the array.  | Returns the current number of elements.    |
 | **Mutability**      | The length cannot be changed after creation. | The length can change as elements are added or removed. |
 | **Capacity**        | The length is equals to the Capacity, as it's a fixed size.| Capacity is separate from length and can be larger than the length. |
+
+
+---
+## Loops
+
+A **loop** statement allows you to **execute a block of code multiple times**, in a loop.
+
+**Loops are simplified in GO providing only one of them to use it for every possible case**, i.e. `for` loop -No `while`, `do-while` or `for-each` loops exist.
+- **Infinite case**:
+```go
+for {
+    // infinite loop
+}
+```
+- **For by Index case**:
+```go
+for index := 0; index < 10; index++ {
+    fmt.Println(index)
+}
+```
+- **For Range case (for each)**:
+Range **iterates over elements for different data structures** (not only arrays and slices).
+In array and slices, **range provides the Index and the Value 'for each' element**, i.e.: 
+```go
+for index, value := range array {
+    fmt.Println(i, v)
+}  
+```
+⚠️ Note in go `_` is also known as **Blank identifier** so in case of requiring the Value and not using the Index using `_` instead of `index` is a valid sentence, i.e.:
+```go
+for _, value := range array {
+    fmt.Println(v)
+}  
+```

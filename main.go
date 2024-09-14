@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	var conferenceName = "Go Conference"
@@ -21,26 +24,40 @@ func main() {
 	fmt.Println("###Welcome to", conferenceName, "booking app.###")
 	fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d. Get your tickets now!\n", conferenceName, remainingTickets, soldTickets)
 
-	var userFirstName, userLastName, userEmail string
-	var userTickets uint8
-	fmt.Println("Enter your first name: ")
-	// be aware that new line is counts as space so avoid placing the full name in one variable separated by space:
-	fmt.Scan(&userFirstName)
-	fmt.Println("Enter your last name: ")
-	fmt.Scan(&userLastName)
-	fmt.Println("Enter your email: ")
-	fmt.Scan(&userEmail)
-	fmt.Println("Enter the ammount of tickets to book: ")
-	fmt.Scan(&userTickets)
-	fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
-	bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
+	for {
+		var userFirstName, userLastName, userEmail string
+		var userTickets uint8
+		fmt.Println("Enter your first name: ")
+		// be aware that new line is counts as space so avoid placing the full name in one variable separated by space:
+		fmt.Scan(&userFirstName)
+		fmt.Println("Enter your last name: ")
+		fmt.Scan(&userLastName)
+		fmt.Println("Enter your email: ")
+		fmt.Scan(&userEmail)
+		fmt.Println("Enter the ammount of tickets to book: ")
+		fmt.Scan(&userTickets)
+		fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
+		bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
 
-	displayBookings(bookings)
+		displayBookings(bookings)
 
-	// recalculate remaining tickets:
-	remainingTickets -= userTickets
-	soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
-	fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d.\n", conferenceName, remainingTickets, soldTickets)
+		// recalculate remaining tickets:
+		remainingTickets -= userTickets
+		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
+
+		firstNames := []string{}
+		for _, booking := range bookings {
+			// strings.Fields(booking):
+			// Fields splits the string s around each instance of one or more consecutive white space characters,
+			// as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
+			fn := strings.Fields(booking)[0]
+			if len(fn) > 0 && fn != "SOLD" {
+				firstNames = append(firstNames, fn)
+			}
+		}
+		fmt.Println("All Bookings by People: ", firstNames)
+		fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d.\n", conferenceName, remainingTickets, soldTickets)
+	}
 }
 
 func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
