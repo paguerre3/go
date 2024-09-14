@@ -7,8 +7,10 @@ func main() {
 	const totalTickets uint8 = 50
 	var remainingTickets uint8 = 30
 	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
-	var bookings [totalTickets]string
-	initBookings(totalTickets, soldTickets, &bookings)
+	bookings := make([]string, 0, totalTickets)                  // len=0, cap=50
+	bookings = initBookings(totalTickets, soldTickets, bookings) // len=20, cap=50
+
+	displayBookings(bookings)
 
 	// Printing the types of variables:
 	fmt.Printf("conferenceName is %T, totalTickets is %T, remainingTickets is %T, soldTickets is %T\n", conferenceName, totalTickets,
@@ -31,7 +33,7 @@ func main() {
 	fmt.Println("Enter the ammount of tickets to book: ")
 	fmt.Scan(&userTickets)
 	fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
-	updateBookings(soldTickets, userTickets, &bookings, userFirstName, userLastName, userEmail)
+	bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
 
 	displayBookings(bookings)
 
@@ -45,38 +47,44 @@ func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
 	return totalTickets - remainingTickets
 }
 
-// Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
-// An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
-func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
+// Bookiing Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
+func initBookings(totalTickets uint8, soldTickets uint8, bookings []string) []string {
 	for i := 0; i < int(totalTickets); i++ {
 		if i < int(soldTickets) {
-			// must update the actual array value not the pointer, i.e. doing dereference:
-			(*bookings)[i] = "SOLD"
+			// The append built-in function appends elements to the end of a slice.
+			// If it has sufficient capacity, the destination is resliced to accommodate the new elements.
+			// If it does not, a new underlying array will be allocated
+			bookings = append(bookings, "SOLD")
 		} else {
-			// Go has syntactic sugar that simplifies working with pointers to arrays.
-			// When you use bookings[i], Go automatically dereferences the pointer for you to access the array element,
-			// so you don’t need to explicitly write (*bookings)[i].
-			bookings[i] = "AVAILABLE"
+			// leave empty avaialble indexes so the len can be smaller that the slice capacity.
+			break
 		}
 	}
+	return bookings
 }
 
-// Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
-// An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
-func updateBookings(soldTickets uint8, userTickets uint8, bookings *[50]string, userFirstName string, userLastName string, userEmail string) {
-	bookIndex := soldTickets + userTickets
-	for i := soldTickets; i < bookIndex; i++ {
-		// len returns the length of the array pointer dereferenced, i.e. the actual array variable value:
-		if int(i) < len(*bookings) {
-			// must update the actual array value not the pointer, i.e. Go automatically is doing dereference (*bookings)[i] in case of array:
-			bookings[i] = fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail)
+// Bookiing Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
+func updateBookings(soldTickets uint8, userTickets uint8, bookings []string, userFirstName string, userLastName string, userEmail string) []string {
+	lastBookIndex := soldTickets + userTickets
+	/*
+		// Array case:
+		for i := soldTickets; i < lastBookIndex; i++ {
+			// len returns the length of the array pointer dereferenced, i.e. the actual array variable value:
+			if int(i) < len(*bookings) {
+				// must update the actual array value not the pointer, i.e. Go automatically is doing dereference (*bookings)[i] in case of array:
+				bookings[i] = fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail)
+			}
 		}
+	*/
+	// Slice Case:
+	for i := soldTickets; i < lastBookIndex; i++ {
+		bookings = append(bookings, fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail))
 	}
+	return bookings
 }
 
-// Passing bookings as copy because it won't be updated in the function, simply used for diosplay:
-func displayBookings(bookings [50]string) {
-	fmt.Printf("The whole Bookings array: %v\n", bookings)
+func displayBookings(bookings []string) {
+	fmt.Printf("The whole Bookings collection: %v\n", bookings)
 	fmt.Print("Bookings display indexed: {")
 	for i := 0; i < len(bookings); i++ {
 		fmt.Printf("[%d]=%s", i, bookings[i])
@@ -86,5 +94,5 @@ func displayBookings(bookings [50]string) {
 			fmt.Print(", ")
 		}
 	}
-	fmt.Printf("Array type is %T and its length is %d\n", bookings, len(bookings))
+	fmt.Printf("Collection type is %T, length is %d and capacity is %d\n", bookings, len(bookings), cap(bookings))
 }

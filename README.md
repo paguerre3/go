@@ -150,7 +150,35 @@ func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
 }
 ```
 
-- **Slice is an abstraction of Array that has Dynamic size**, more flexible and powerful, i.e. slices are also **index-based** and **have a size, but is Resized when Needed**. More flexible and powerful than arrays, i.e. **Variable-length** or get a sub-array of its own.     
+- **Slice is an abstraction of Array that has Dynamic size**, more flexible and powerful, i.e. slices are also **index-based** and **have a size, but is Resized when Needed**. More flexible and powerful than arrays, i.e. **Variable-length** or get a sub-array of its own.
+Valid declarations of Slices are `var bookings []string`, `var bookings = []string{}` or `bookings := []string{}` never specifying the size. Also, **using `make()` to declare slices in Go is considered good practice because it allows you to initialize slices with a specific length and capacity, which improves memory management and performance**, e.g.: `var bookings = make([]string, 20, 50) // len=20 and cap=50`.
+```go
+func main() {
+	var conferenceName = "Go Conference"
+	const totalTickets uint8 = 50
+	var remainingTickets uint8 = 30
+	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
+	bookings := make([]string, 0, totalTickets)                  // len=0, cap=50
+	bookings = initBookings(totalTickets, soldTickets, bookings) // len=20, cap=50
+    // more code here
+}
+
+// Bookiing Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
+func initBookings(totalTickets uint8, soldTickets uint8, bookings []string) []string {
+	for i := 0; i < int(totalTickets); i++ {
+		if i < int(soldTickets) {
+			// The append built-in function appends elements to the end of a slice.
+			// If it has sufficient capacity, the destination is resliced to accommodate the new elements.
+			// If it does not, a new underlying array will be allocated
+			bookings = append(bookings, "SOLD")
+		} else {
+			// leave empty avaialble indexes so the len can be smaller that the slice capacity.
+			break
+		}
+	}
+	return bookings
+}
+```	
 
 ⚠️ **Note passing a Slice as a parameter is different from passing an Array as a parameter as GO passes Slices by Reference and Arrays by Value**, i.e.:
 
