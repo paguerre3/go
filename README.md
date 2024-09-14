@@ -155,6 +155,7 @@ func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
 ⚠️ **Note passing a Slice as a parameter is different from passing an Array as a parameter as GO passes Slices by Reference and Arrays by Value**, i.e.:
 
 **1. Slices Are Passed by Reference**
+
 **A slice in Go is a descriptor** that contains:
 - **A pointer to the underlying array**.
 - A length (the number of elements in the slice).
@@ -178,6 +179,7 @@ func main() {
 ```
 
 **2. Arrays Are Passed by Value**
+
 In contrast, when you pass an array to a function, Go passes **a copy** of the entire array. This means:
 - Modifications to the array inside the function will not affect the original array outside the function because the function is working with a **copy** of the original array.
 - **Arrays are fixed in size and passing them can be inefficient for large arrays since the entire array is copied**.
