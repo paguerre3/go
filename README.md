@@ -2,7 +2,7 @@
 Go language compendium
 
 ---
-**Why Go?**
+### Why Go?
 
 - **Built-in Concurrency Mechanism** that was **designed to run on multiple cores** and to support concurrency.
 - **Concurrency is cheap and easy** compared to other languages like C++ or Java.
@@ -12,7 +12,7 @@ Go language compendium
 
 
 ---
-**Why Go Modules Replace GOPATH:**
+### Why Go Modules Replace GOPATH:
 
 Go modules use the `go.mod` file to manage dependencies for each project, and you can create Go projects anywhere in your file system, not just within the `GOPATH` directory.
 Each project is self-contained, meaning that each project has its own module file (`go.mod`) to manage its dependencies independently of other projects.
@@ -26,7 +26,7 @@ Only need to set `GOPATH` in the following cases:
 
 
 ---
-**Useful Go commands:**
+### Go Commands summary:
 
 | **Command**           | **Usage**                          | **Description**                                                                 | **Example**                                                                 |
 |-----------------------|------------------------------------|---------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
@@ -48,7 +48,7 @@ Only need to set `GOPATH` in the following cases:
 
 
 ---
-**Module paths for downloadable packages**
+### Module paths for downloadable packages
 
 If you’re creating a project which can be downloaded and used by other people and programs, then it’s good practice for your module path to equal the location that the code can be downloaded from.
 
@@ -56,7 +56,7 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 
 
 ---
-**Packages, Variables, and Constants:**
+### Packages, Variables, and Constants:
 
 - All code must belong to **packages**, i.e. all code is organized in **packages**. The first statement in a file should be a package declaration. **A package is a set of related source files** with their functions, e.g. [`fmt`](https://pkg.go.dev/fmt) and its functions to print in different formats like `Println` or `Printf` using printing verbs like `%v`, `%s`, `%d`, `%t`, etc.
 - **Variables** are used to store values and reuse/update values like *containers*. Variables are declared with the `var` keyword.
@@ -66,7 +66,7 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 
 
 ---
-**Data Types:**
+### Data Types:
 
 | Data Type   | Description                                  | Example                                  |
 |-------------|----------------------------------------------|------------------------------------------|
@@ -98,7 +98,7 @@ For instance, if your package is hosted at https://github.com/foo/bar then the m
 
 
 ---
-**Pointers:**
+### Pointers:
 
 Variables are stored in memory but when we reference a variable we are actually pointing to its memory address, i.e.
 **a Pointer is a Variable that points to the Memory Address of another Variable** -*special variable* that holds the memory address of the other variable, e.g. printing a pointer returns the memory address of the variable pointed while printing a variable returns the actual value.
@@ -115,41 +115,38 @@ Pointer of soldTickets is 0xc0000ac00b and its Variable value 20
 
 
 ---
-**Arrays and Slices:**
+### Arrays and Slices:
 
 **Arrays and Slices** are data structures to **store collections of elements in a Single Variable**.
 
 - **An Array has a Fixed size**, i.e. how many elements the array can hold, 
 e.g. `var nums [3]int`, `var nums = [3]int{1, 2, 3}`, `var nums = [3]int{1}` and `var nums = [3]int{}` are valid declarations.
-
-**Arrays are indexed starting from 0**, e.g. `nums[0] = 1` and `nums[1] = 10`. 
-
-Examples of updating an array inside a function:
+**Arrays are indexed starting from 0**, e.g. `nums[0] = 1` and `nums[1] = 10`. Examples of updating an array inside a function: 
 ```go
 func main() {
-	var conferenceName = "Go Conference"
-	const totalTickets uint8 = 50
-	var remainingTickets uint8 = 30
-	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
-	var bookings [totalTickets]string
-	initBookings(totalTickets, soldTickets, &bookings)
+    var conferenceName = "Go Conference"
+    const totalTickets uint8 = 50
+    var remainingTickets uint8 = 30
+    soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
+    var bookings [totalTickets]string
+    initBookings(totalTickets, soldTickets, &bookings)
     // ... more code here
 }
 
 // Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
 // An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
 func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
-	for i := 0; i < int(totalTickets); i++ {
-		if i < int(soldTickets) {
-			// must update the actual array value not the pointer, i.e. doing dereference:
-			(*bookings)[i] = "SOLD"
-		} else {
-			// Go has syntactic sugar that simplifies working with pointers to arrays.
-			// When you use bookings[i], Go automatically dereferences the pointer for you to access the array element,
-			// so you don’t need to explicitly write (*bookings)[i].
-			bookings[i] = "AVAILABLE"
-		}
-	}
+    for i := 0; i < int(totalTickets); i++ {
+        if i < int(soldTickets) {
+            // must update the actual array value not the pointer, i.e. doing dereference:
+            (*bookings)[i] = "SOLD"
+        } else {
+            // Go has syntactic sugar that simplifies working with pointers to arrays.
+            // When you use bookings[i], Go automatically dereferences the pointer for you to access the array element,
+            // so you don’t need to explicitly write (*bookings)[i].
+            bookings[i] = "AVAILABLE"
+        }
+    }
 }
 ```
 
