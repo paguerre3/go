@@ -150,3 +150,67 @@ func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
 }
 ```
 
+- **Slice is an abstraction of Array that has Dynamic size**, more flexible and powerful, i.e. slices are also **index-based** and **have a size, but is Resized when Needed**. More flexible and powerful than arrays, i.e. **Variable-length** or get a sub-array of its own.     
+
+⚠️ **Note passing a Slice as a parameter is different from passing an Array as a parameter as GO passes Slices by Reference and Arrays by Value**, i.e.:
+
+**1. Slices Are Passed by Reference**
+**A slice in Go is a descriptor** that contains:
+- **A pointer to the underlying array**.
+- A length (the number of elements in the slice).
+- A capacity (the size of the underlying array).
+
+When you pass a slice to a function, Go passes this descriptor (which includes the pointer to the underlying array). This means:
+- **Modifications to the slice elements inside the function** will affect the original slice since it references the same underlying array.
+- The slice header (pointer, length, capacity) itself is passed by value, but the pointer still points to the same underlying array, allowing shared access to the elements.
+
+Example:
+```go
+func modifySlice(s []int) {
+    s[0] = 100 // This modifies the original array
+}
+
+func main() {
+    numbers := []int{1, 2, 3}
+    modifySlice(numbers) // Modifies the original slice
+    fmt.Println(numbers) // Output: [100 2 3]
+}
+```
+
+**2. Arrays Are Passed by Value**
+In contrast, when you pass an array to a function, Go passes **a copy** of the entire array. This means:
+- Modifications to the array inside the function will not affect the original array outside the function because the function is working with a **copy** of the original array.
+- **Arrays are fixed in size and passing them can be inefficient for large arrays since the entire array is copied**.
+
+Example:
+```go
+func modifyArray(a [3]int) {
+    a[0] = 100 // Modifies only the copy of the array
+}
+
+func main() {
+    numbers := [3]int{1, 2, 3}
+    modifyArray(numbers) // Passes a copy of the array
+    fmt.Println(numbers) // Output: [1 2 3] - Original array is unchanged
+}
+```
+
+**Key Differences Between Array and Slice in General:**
+
+| Aspect               | Slice                                      | Array                                       |
+|----------------------|--------------------------------------------|---------------------------------------------|
+| **Passing Behavior**  | Passed by reference (pointer to array)     | Passed by value (entire array is copied)    |
+| **Size**              | Dynamic, can change size (flexible length) | Fixed size (defined at declaration)         |
+| **Modification**      | Changes inside the function affect original | Changes inside the function affect only the copy |
+| **Efficiency**        | More efficient for large data since only the descriptor is passed | Less efficient for large arrays as the entire array is copied |
+| **Underlying Data**   | Slices reference an underlying array       | Arrays do not have a separate underlying structure |
+| **Use Case**          | Preferred when working with collections of unknown or variable size | Used for fixed-size collections              |
+
+**Key Differences Between Array and Slice 'Length':**
+
+| Aspect              | Array                                        | Slice                                      |
+|---------------------|----------------------------------------------|--------------------------------------------|
+| **Size**            | Fixed size, set at declaration.              | Dynamic size, can grow or shrink.          |
+| **`len()` Result**  | Always returns the fixed size of the array.  | Returns the current number of elements.    |
+| **Mutability**      | The length cannot be changed after creation. | The length can change as elements are added or removed. |
+| **Capacity**        | The length is equals to the Capacity, as it's a fixed size.| Capacity is separate from length and can be larger than the length. |
