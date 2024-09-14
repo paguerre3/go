@@ -45,29 +45,36 @@ func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
 	return totalTickets - remainingTickets
 }
 
+// Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
+// An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
 func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
 	for i := 0; i < int(totalTickets); i++ {
 		if i < int(soldTickets) {
 			// must update the actual array value not the pointer, i.e. doing dereference:
 			(*bookings)[i] = "SOLD"
 		} else {
-			(bookings)[i] = "AVAILABLE"
+			// Go has syntactic sugar that simplifies working with pointers to arrays.
+			// When you use bookings[i], Go automatically dereferences the pointer for you to access the array element,
+			// so you don’t need to explicitly write (*bookings)[i].
+			bookings[i] = "AVAILABLE"
 		}
 	}
 }
 
+// Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
+// An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
 func updateBookings(soldTickets uint8, userTickets uint8, bookings *[50]string, userFirstName string, userLastName string, userEmail string) {
 	bookIndex := soldTickets + userTickets
 	for i := soldTickets; i < bookIndex; i++ {
-		// len returns the length of the array pointer dereferenced:
+		// len returns the length of the array pointer dereferenced, i.e. the actual array variable value:
 		if int(i) < len(*bookings) {
-			// must update the actual array value not the pointer, i.e. doing dereference:
-			(*bookings)[i] = fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail)
+			// must update the actual array value not the pointer, i.e. Go automatically is doing dereference (*bookings)[i] in case of array:
+			bookings[i] = fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail)
 		}
 	}
 }
 
-// passing bookings as copy because it won't be updated in the function, simply used for diosplay:
+// Passing bookings as copy because it won't be updated in the function, simply used for diosplay:
 func displayBookings(bookings [50]string) {
 	fmt.Printf("The whole Bookings array: %v\n", bookings)
 	fmt.Print("Bookings display indexed: {")

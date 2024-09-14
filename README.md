@@ -124,5 +124,32 @@ e.g. `var nums [3]int`, `var nums = [3]int{1, 2, 3}`, `var nums = [3]int{1}` and
 
 **Arrays are indexed starting from 0**, e.g. `nums[0] = 1` and `nums[1] = 10`. 
 
+Examples of updating an array inside a function:
+```go
+func main() {
+	var conferenceName = "Go Conference"
+	const totalTickets uint8 = 50
+	var remainingTickets uint8 = 30
+	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
+	var bookings [totalTickets]string
+	initBookings(totalTickets, soldTickets, &bookings)
+    // ... more code here
+}
 
+// Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
+// An alternative approach is to return the copy of the bookings array and then replacing the original after the function is called.
+func initBookings(totalTickets uint8, soldTickets uint8, bookings *[50]string) {
+	for i := 0; i < int(totalTickets); i++ {
+		if i < int(soldTickets) {
+			// must update the actual array value not the pointer, i.e. doing dereference:
+			(*bookings)[i] = "SOLD"
+		} else {
+			// Go has syntactic sugar that simplifies working with pointers to arrays.
+			// When you use bookings[i], Go automatically dereferences the pointer for you to access the array element,
+			// so you don’t need to explicitly write (*bookings)[i].
+			bookings[i] = "AVAILABLE"
+		}
+	}
+}
+```
 
