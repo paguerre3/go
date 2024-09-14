@@ -113,3 +113,16 @@ fmt.Println("Pointer of soldTickets is", &soldTickets, "and its Variable value",
 Pointer of soldTickets is 0xc0000ac00b and its Variable value 20
 ```
 
+
+---
+**Arrays and Slices:**
+
+**Arrays and Slices** are data structures to **store collections of elements in a Single Variable**.
+
+- **An Array has a Fixed size**, i.e. how many elements the array can hold, 
+e.g. `var nums [3]int`, `var nums = [3]int{1, 2, 3}`, `var nums = [3]int{1}` and `var nums = [3]int{}` are valid declarations.
+
+**Arrays are indexed starting from 0**, e.g. `nums[0] = 1` and `nums[1] = 10`. 
+
+
+
