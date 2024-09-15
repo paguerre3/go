@@ -413,7 +413,7 @@ In Go, memory management is straightforward thanks to its garbage collector, but
   - **Allocation/Deallocation**: Handled by the garbage collector, which may introduce some overhead.
   - **Lifetime**: Managed automatically; memory is freed when there are no references to it.
 
-Here’s a simple example illustrating stack and heap usage:
+Here are 2 examples illustrating stack and heap usage:
 
 ```go
 package main
