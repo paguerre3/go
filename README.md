@@ -347,7 +347,7 @@ for remainingTickets > 0 { }
 | **Operator** | **Description**         | **Example**        | **Explanation**                                         |
 |--------------|-------------------------|--------------------|---------------------------------------------------------|
 | `&&`         | Logical AND              | `x > 0 && y < 10`  | True if both conditions are true.                       |
-| `||`         | Logical OR               | `x > 0 || y < 10`  | True if at least one condition is true.                 |
+| `\|\|`         | Logical OR               | `x > 0 \|\| y < 10`  | True if at least one condition is true.                 |
 | `!`          | Logical NOT              | `!x`               | Negates the condition (true becomes false, and vice versa). |
 
 4. **Bitwise Operators**
