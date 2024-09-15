@@ -386,6 +386,36 @@ for remainingTickets > 0 { }
 
 
 ---
+## Switch Case:
+
+The `switch` statement in Go is used to evaluate an expression against multiple cases, making it cleaner than using multiple `if-else` statements.
+- ⚠️ No need for `break` (cases automatically break).
+- Can evaluate expressions, not just constants.
+- Optional `default` case handles unmatched cases.
+
+In this example, the value of `day` is matched with the cases, and **Wednesday** is printed.
+```go
+package main
+
+import "fmt"
+
+func main() {
+    day := 3
+    switch day {
+    case 1:
+        fmt.Println("Monday")
+    case 2:
+        fmt.Println("Tuesday")
+    case 3:
+        fmt.Println("Wednesday")
+    default:
+        fmt.Println("Invalid day")
+    }
+}
+```
+
+
+---
 ## Memory Stack and Heap
 In Go, memory management is straightforward thanks to its garbage collector, but understanding how stack and heap memory work can still be useful:
 

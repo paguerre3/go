@@ -37,15 +37,12 @@ func main() {
 		fmt.Scan(&userEmail)
 		fmt.Println("Enter the ammount of tickets to book: ")
 		fmt.Scan(&userTickets)
-		fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
-
-		// validate avaibaility:
-		if userTickets > remainingTickets {
-			fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
-			// continue to next iteration to try again:
+		// continue to next iteration to try again:
+		if vi := isValidInputData(userFirstName, userLastName, userEmail, userTickets, remainingTickets, conferenceName); !vi {
 			continue
 		}
 
+		fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
 		bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
 		displayBookings(bookings)
 
@@ -126,4 +123,32 @@ func displayBookings(bookings []string) {
 		}
 	}
 	fmt.Printf("Collection type is %T, length is %d and capacity is %d\n", bookings, len(bookings), cap(bookings))
+}
+
+func isValidInputData(userFirstName string, userLastName string, userEmail string, userTickets uint8, remainingTickets uint8, conferenceName string) (vi bool) {
+	isValidUserName := len(userFirstName) >= 2 && len(userLastName) >= 2
+	vi = true
+	if !isValidUserName {
+		fmt.Println("Please enter a valid name")
+		vi = false
+	}
+
+	isValidEmail := len(userEmail) > 3 && strings.Contains(userEmail, "@")
+	if !isValidEmail {
+		fmt.Println("Please enter a valid email address")
+		vi = false
+	}
+
+	isValidTicket := userTickets > 0
+	if !isValidTicket {
+		fmt.Println("Please enter a valid number of tickets")
+		vi = false
+	}
+
+	// validate avaibaility:
+	if userTickets > remainingTickets {
+		fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
+		vi = false
+	}
+	return vi
 }
