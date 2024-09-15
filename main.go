@@ -12,7 +12,6 @@ func main() {
 	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
 	bookings := make([]string, 0, totalTickets)                  // len=0, cap=50
 	bookings = initBookings(totalTickets, soldTickets, bookings) // len=20, cap=50
-
 	displayBookings(bookings)
 
 	// Printing the types of variables:
@@ -24,6 +23,8 @@ func main() {
 	fmt.Println("###Welcome to", conferenceName, "booking app.###")
 	fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d. Get your tickets now!\n", conferenceName, remainingTickets, soldTickets)
 
+	// infinite loop for ==> for "true", i.e. for { }
+	// for remainingTickets > 0 { // loop with true false condition
 	for {
 		var userFirstName, userLastName, userEmail string
 		var userTickets uint8
@@ -37,8 +38,15 @@ func main() {
 		fmt.Println("Enter the ammount of tickets to book: ")
 		fmt.Scan(&userTickets)
 		fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
-		bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
 
+		// validate avaibaility:
+		if userTickets > remainingTickets {
+			fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
+			// continue to next iteration to try again:
+			continue
+		}
+
+		bookings = updateBookings(soldTickets, userTickets, bookings, userFirstName, userLastName, userEmail)
 		displayBookings(bookings)
 
 		// recalculate remaining tickets:
@@ -57,6 +65,12 @@ func main() {
 		}
 		fmt.Println("All Bookings by People: ", names)
 		fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d.\n", conferenceName, remainingTickets, soldTickets)
+
+		if remainingTickets == 0 {
+			// end program:
+			fmt.Println("Our conference is booked out. Come back next year.")
+			break
+		}
 	}
 }
 

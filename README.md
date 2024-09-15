@@ -272,9 +272,166 @@ for index, value := range array {
     fmt.Println(i, v)
 }  
 ```
-⚠️ Note in go `_` is also known as **Blank identifier** so in case of requiring the Value and not using the Index using `_` instead of `index` is a valid sentence, i.e.:
+⚠️ Note in go `_` is also known as **Blank identifier** so in case of requiring the Value without the Index setting `_` instead of `index` is a valid sentence, i.e.:
 ```go
 for _, value := range array {
     fmt.Println(v)
 }  
 ```
+
+
+---
+## Conditionals
+
+The **expression that evaluate** to either `true` or `false` **is called a condition**.
+
+**`if-else`:**
+```go
+if condition {
+    // code to execute if condition is true
+} else if anotherCondition {
+    // code to execute if anotherCondition is true
+} else {
+    // code to execute if none of the above conditions are true
+}
+```
+
+**Short Statement with Condition:**
+
+You can also include a short statement before the condition, i.e. ⚠️ **declare a variable in the same line as `if`**:
+
+```go
+if y := 5; y > 0 {
+    fmt.Println("y is positive")
+}
+```
+
+Here, `y` is declared and initialized only within the scope of the `if` block.
+
+⚠️ A `true` or `false` boolean conditional can also be applied to **loops**, e.g.:
+```go
+// infinite loop for ==> for "true", i.e.: 
+for { }
+	
+// loop with true false condition:
+for remainingTickets > 0 { }
+```
+
+
+---
+## Operators
+
+1. **Arithmetic Operators**
+
+| **Operator** | **Description**     | **Example**        | **Explanation**                                 |
+|--------------|---------------------|--------------------|-------------------------------------------------|
+| `+`          | Addition             | `x + y`            | Adds `x` and `y`.                               |
+| `-`          | Subtraction          | `x - y`            | Subtracts `y` from `x`.                         |
+| `*`          | Multiplication       | `x * y`            | Multiplies `x` by `y`.                          |
+| `/`          | Division             | `x / y`            | Divides `x` by `y`.                             |
+| `%`          | Modulo               | `x % y`            | Remainder of `x` divided by `y`.                |
+
+2. **Comparison Operators**
+
+| **Operator** | **Description**       | **Example**        | **Explanation**                                 |
+|--------------|-----------------------|--------------------|-------------------------------------------------|
+| `==`         | Equal to               | `x == y`           | True if `x` is equal to `y`.                    |
+| `!=`         | Not equal to           | `x != y`           | True if `x` is not equal to `y`.                |
+| `>`          | Greater than           | `x > y`            | True if `x` is greater than `y`.                |
+| `<`          | Less than              | `x < y`            | True if `x` is less than `y`.                   |
+| `>=`         | Greater than or equal  | `x >= y`           | True if `x` is greater than or equal to `y`.    |
+| `<=`         | Less than or equal     | `x <= y`           | True if `x` is less than or equal to `y`.       |
+
+3. **Logical Operators**
+
+| **Operator** | **Description**         | **Example**        | **Explanation**                                         |
+|--------------|-------------------------|--------------------|---------------------------------------------------------|
+| `&&`         | Logical AND              | `x > 0 && y < 10`  | True if both conditions are true.                       |
+| `||`         | Logical OR               | `x > 0 || y < 10`  | True if at least one condition is true.                 |
+| `!`          | Logical NOT              | `!x`               | Negates the condition (true becomes false, and vice versa). |
+
+4. **Bitwise Operators**
+
+| **Operator** | **Description**         | **Example**        | **Explanation**                                      |
+|--------------|-------------------------|--------------------|------------------------------------------------------|
+| `&`          | Bitwise AND              | `x & y`            | Performs AND on each pair of bits.                   |
+| `\|`          | Bitwise OR               | `x \| y`            | Performs OR on each pair of bits.                    |
+| `^`          | Bitwise XOR              | `x ^ y`            | Performs XOR on each pair of bits.                   |
+| `&^`         | AND NOT (bit clear)      | `x &^ y`           | Clears bits of `x` where `y` is 1.                   |
+| `<<`         | Left shift               | `x << 2`           | Shifts `x` to the left by 2 bits (multiply by 4).     |
+| `>>`         | Right shift              | `x >> 2`           | Shifts `x` to the right by 2 bits (divide by 4).      |
+
+5. **Assignment Operators**
+
+| **Operator** | **Description**          | **Example**         | **Explanation**                                        |
+|--------------|--------------------------|---------------------|--------------------------------------------------------|
+| `=`          | Assignment                | `x = y`             | Assigns the value of `y` to `x`.                       |
+| `+=`         | Add and assign            | `x += y`            | Adds `y` to `x` and assigns the result to `x`.         |
+| `-=`         | Subtract and assign       | `x -= y`            | Subtracts `y` from `x` and assigns the result to `x`.  |
+| `*=`         | Multiply and assign       | `x *= y`            | Multiplies `x` by `y` and assigns the result to `x`.   |
+| `/=`         | Divide and assign         | `x /= y`            | Divides `x` by `y` and assigns the result to `x`.      |
+| `%=`         | Modulo and assign         | `x %= y`            | Finds the remainder of `x` divided by `y`, assigns it to `x`. |
+| `&=`         | Bitwise AND and assign    | `x &= y`            | Performs bitwise AND and assigns the result to `x`.    |
+| `\|=`         | Bitwise OR and assign     | `x \|= y`            | Performs bitwise OR and assigns the result to `x`.     |
+| `^=`         | Bitwise XOR and assign    | `x ^= y`            | Performs bitwise XOR and assigns the result to `x`.    |
+| `<<=`        | Left shift and assign     | `x <<= 2`           | Shifts `x` left by 2 bits and assigns the result to `x`. |
+| `>>=`        | Right shift and assign    | `x >>= 2`           | Shifts `x` right by 2 bits and assigns the result to `x`. |
+
+6. **Miscellaneous Operators**
+
+| **Operator** | **Description**         | **Example**         | **Explanation**                                        |
+|--------------|-------------------------|---------------------|--------------------------------------------------------|
+| `++`         | Increment               | `x++`               | Increases `x` by 1 (post-increment).                   |
+| `--`         | Decrement               | `x--`               | Decreases `x` by 1 (post-decrement).                   |
+
+
+---
+## Memory Stack and Heap
+In Go, memory management is straightforward thanks to its garbage collector, but understanding how stack and heap memory work can still be useful:
+
+**Memory Stack**
+
+- **Purpose**: The stack is used for managing function calls, local variables, and control flow.
+- **Structure**: Operates in a **Last-In-First-Out (LIFO)** manner. Each function call pushes a new **frame** onto the stack, and **the frame is removed when the function returns**.
+- **Usage**:
+  - **Function Frames**: Stores local variables and function parameters.
+  - **Automatic Allocation**: Local variables and parameters are allocated on the stack.
+- **Characteristics**:
+  - **Size**: Typically limited in size (stack size is managed by the Go runtime).
+  - **Allocation/Deallocation**: Fast and automatic. The Go runtime manages this.
+  - **Lifetime**: Memory is reclaimed automatically when the function returns.
+
+**Heap**
+
+- **Purpose**: The heap is used for **dynamic memory allocation**. Objects and data structures that need to persist beyond the scope of function calls are allocated here, e.g. **pointer**.
+- **Structure**: The heap allows for more flexible allocation and deallocation. Memory is managed by the Go runtime's garbage collector.
+- **Usage**:
+  - **Dynamic Allocation**: Used for data that needs to live beyond the lifetime of a single function call or needs to be shared among different parts of a program.
+  - **Garbage Collection**: Go automatically manages memory allocation and deallocation, so you don't need to manually free memory. The garbage collector reclaims memory that is no longer in use.
+- **Characteristics**:
+  - **Size**: Typically larger and more flexible compared to the stack.
+  - **Allocation/Deallocation**: Handled by the garbage collector, which may introduce some overhead.
+  - **Lifetime**: Managed automatically; memory is freed when there are no references to it.
+
+Here’s a simple example illustrating stack and heap usage:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    a := 10      // Stack allocation
+    b := &a      // Heap allocation (a reference to stack variable `a`)
+
+    fmt.Println(a) // Stack
+    fmt.Println(*b) // Dereferencing heap reference
+}
+```
+
+***Summary***
+
+- **Stack**: Used for local variables and function call management. Automatic and fast allocation/deallocation.
+- **Heap**: Used for dynamic data and objects that persist beyond function scopes. Managed by Go’s garbage collector, which automates memory management but may add overhead.
+
+Understanding how Go handles memory can help you write more efficient and effective code, especially when working with large data structures or managing performance.
