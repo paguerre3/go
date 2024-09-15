@@ -45,17 +45,17 @@ func main() {
 		remainingTickets -= userTickets
 		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
 
-		firstNames := []string{}
+		names := []string{}
 		for _, booking := range bookings {
 			// strings.Fields(booking):
 			// Fields splits the string s around each instance of one or more consecutive white space characters,
 			// as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
-			fn := strings.Fields(booking)[0]
-			if len(fn) > 0 && fn != "SOLD" {
-				firstNames = append(firstNames, fn)
+			fields := strings.Fields(booking)
+			if len(fields) > 0 && fields[0] != "SOLD" {
+				names = append(names, fmt.Sprintf("%s %s", fields[1], fields[2]))
 			}
 		}
-		fmt.Println("All Bookings by People: ", firstNames)
+		fmt.Println("All Bookings by People: ", names)
 		fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d.\n", conferenceName, remainingTickets, soldTickets)
 	}
 }
@@ -95,7 +95,7 @@ func updateBookings(soldTickets uint8, userTickets uint8, bookings []string, use
 	*/
 	// Slice Case:
 	for i := soldTickets; i < lastBookIndex; i++ {
-		bookings = append(bookings, fmt.Sprintf("SOLD TO %s %s w/E-Mail %s", userFirstName, userLastName, userEmail))
+		bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
 	}
 	return bookings
 }
