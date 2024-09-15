@@ -429,6 +429,8 @@ func main() {
 }
 ```
 
+![stack vs heap](./img/1-stack-heap.png)
+
 ***Summary***
 
 - **Stack**: Used for local variables and function call management. Automatic and fast allocation/deallocation.
