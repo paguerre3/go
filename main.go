@@ -19,8 +19,6 @@ const (
 )
 
 func main() {
-
-	// multiple retunrs are allowed in go
 	soldTickets := initConference()
 	common.DisplayBookings(bookings)
 
@@ -29,6 +27,7 @@ func main() {
 	// infinite loop for ==> for "true", i.e. for { }
 	// for remainingTickets > 0 { // loop with true false condition.
 	for {
+		// multiple returns are allowed in go
 		userFirstName, userLastName, userEmail, userTickets := getUserInputs()
 		if vi := common.IsValidInputData(userFirstName, userLastName, userEmail, userTickets, remainingTickets, conferenceName); !vi {
 			// continue to next iteration to try again:

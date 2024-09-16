@@ -551,11 +551,9 @@ const (
 )
 
 func main() {
-
-	// multiple retunrs are allowed in go
-	soldTickets := initConference()
-	common.DisplayBookings(bookings)
-    
+    soldTickets := initConference()
+    common.DisplayBookings(bookings)
+        
     // more code here
 }	
 ```
