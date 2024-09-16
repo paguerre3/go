@@ -130,7 +130,7 @@ func main() {
     soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
     var bookings [totalTickets]string
     initBookings(totalTickets, soldTickets, &bookings)
-    // ... more code here
+    // more code here
 }
 
 // Must pass booking Pointer otherwise array will be passed by copy and original array values won't be updated.
@@ -467,3 +467,54 @@ func main() {
 - **Heap**: Used for dynamic data and objects that persist beyond function scopes. Managed by Go’s garbage collector, which automates memory management but may add overhead.
 
 Understanding how Go handles memory can help you write more efficient and effective code, especially when working with large data structures or managing performance.
+
+
+---
+## Functions
+
+A function encapsulates code into its own container, which logically belong together.
+Functions are declared using the `func` keyword and should be declared with a descriptive name.
+A call of the function by its name is performed to execute the block of code that belong to it.
+Every program has at least one function, i.e. the `main` function.
+**Function calls are a way of reusing the same behavior**.
+
+**Multiple returns are allowed in functions**, e.g.:
+```go
+func initConference() (uint8, uint8, uint8, []string) {
+	const totalTickets uint8 = 50
+	var remainingTickets uint8 = 30
+	soldTickets := calculateSoldTickets(remainingTickets, totalTickets)
+	bookings := make([]string, 0, totalTickets)                  // len=0, cap=50
+	bookings = initBookings(totalTickets, soldTickets, bookings) // len=20, cap=50
+	return totalTickets, remainingTickets, soldTickets, bookings
+}
+```
+
+**Lower case for Private members or functions while Upper case for Public members or functions.** 
+
+⚠️ **Package Level Variables** are defined at the top **outside all functions**., e.g.:
+```go
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+// package level variables:
+var (
+	remainingTickets uint8 = 30
+	bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
+)
+
+const (
+	conferenceName       = "Go Conference"
+	totalTickets   uint8 = 50
+)
+
+func main() {
+    // more code here
+}	
+```
+
+⚠️ **Best Practice is to define Variables as "local as possible"**, i.e. create the variable when you need it (the previous example is considered bad practice). **Local variables** are defined **inside a function or block**. They can be accessed only inside the function or block of code.
