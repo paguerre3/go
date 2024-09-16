@@ -629,12 +629,12 @@ In this example, `"age"` is the key, and `30` is the value. Maps allow quick loo
 
 Other example:
 ```go
-	var userData = make(map[string]string)
-	userData["firstName"] = userFirstName
-	userData["lastName"] = userLastName
-	userData["email"] = userEmail
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
-	for i := soldTickets; i < lastBookIndex; i++ {
-		bookings = append(bookings, userData)
-	}
+var userData = make(map[string]string)
+userData["firstName"] = userFirstName
+userData["lastName"] = userLastName
+userData["email"] = userEmail
+userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
+for i := soldTickets; i < lastBookIndex; i++ {
+    bookings = append(bookings, userData)
+}
 ```
