@@ -247,7 +247,7 @@ func main() {
 
 
 ---
-## Loops
+### Loops
 
 A **loop** statement allows you to **execute a block of code multiple times**, in a loop.
 
@@ -281,7 +281,7 @@ for _, value := range array {
 
 
 ---
-## Conditionals
+### Conditionals
 
 The **expression that evaluate** to either `true` or `false` **is called a condition**.
 
@@ -319,7 +319,7 @@ for remainingTickets > 0 { }
 
 
 ---
-## Operators
+### Operators
 
 1. **Arithmetic Operators**
 
@@ -386,7 +386,7 @@ for remainingTickets > 0 { }
 
 
 ---
-## Switch Case:
+### Switch Case:
 
 The `switch` statement in Go is used to evaluate an expression against multiple cases, making it cleaner than using multiple `if-else` statements.
 - ⚠️ No need for `break` (cases automatically break).
@@ -416,7 +416,7 @@ func main() {
 
 
 ---
-## Memory Stack and Heap
+### Memory Stack and Heap
 In Go, memory management is straightforward thanks to its garbage collector, but understanding how stack and heap memory work can still be useful:
 
 **Memory Stack**
@@ -470,7 +470,7 @@ Understanding how Go handles memory can help you write more efficient and effect
 
 
 ---
-## Functions
+### Functions
 
 A function encapsulates code into its own container, which logically belong together.
 Functions are declared using the `func` keyword and should be declared with a descriptive name.
@@ -521,7 +521,7 @@ func main() {
 
 
 ---
-## Packages and Scopes
+### Packages and Scopes
 
 Modularization can be achieved using Packages, i.e. GO programs are organized into packages.
 A **Package is a collection of GO files**, a.k.a. a single module. 
@@ -614,7 +614,7 @@ func GetBookingsByPeopleNames(bookings []string) []string {
 
 
 ---
-## Maps
+### Maps
 
 Maps are built-in data structures that **store key-value pairs**. A map is created using the `make` function or by using a map literal. The keys must be of a type that supports equality comparison, and the values can be of any type, e.g.:
 ```go
@@ -641,7 +641,7 @@ for i := soldTickets; i < lastBookIndex; i++ {
 
 
 ---
-# Structs
+### Structs
 A struct is a composite data type that groups together fields (variables) under one name. 
 Each field has a name and a type, and **structs are commonly used to define custom types**, e.g.:
 ```go
@@ -655,3 +655,193 @@ p := Person{Name: "Alice", Age: 30}
 Here, `Person` is a struct with `Name` and `Age` fields, and `p` is an instance of `Person`. Structs help organize related data.
 
 - **Mixed data types** can be defined within a struct (as the opposite to maps that support only one type of values defined during declaration).
+
+
+---
+### `goroutines` - Concurrency
+
+`goroutine` are used for achieving concurrency and/or parallelism, allowing you to run functions independently of each other. **They are lightweight compared to OS threads, as Go's runtime handles their scheduling and management**. `goroutines` are created by prefixing a function call with the `go` keyword, **allowing it to run concurrently**, e.g.:
+```go
+func sayHello() {
+    fmt.Println("Hello")
+}
+
+func main() {
+    go sayHello()  // Starts a new goroutine
+    fmt.Println("World")
+}
+```
+In this example, both `sayHello()` and `fmt.Println("World")` run concurrently. *The order of execution between them is non-deterministic*.
+
+**Channels: Communication between `Goroutines`**
+
+**Channels** are used to **safely communicate data between `goroutine`**, ensuring data consistency **without the need for explicit locking** mechanisms like `mutex`.
+
+A **channel** is a typed **conduit through which you can send and receive values between `goroutines`**.
+
+1. **Creating a Channel:**
+Channels are created using the `make` function:
+```go
+ch := make(chan int)  // Creates a channel for int values
+```
+
+2. **Sending and Receiving Values:**
+To **send data** into a channel, use the `<-` operator:
+```go
+ch <- 42  // Sends the value 42 into the channel
+```
+
+To **receive data** from a channel:
+```go
+value := <-ch  // Receives/obtains a value from the channel
+```
+
+*Example: `Goroutines` with Channels*
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func sum(a int, b int, ch chan int) {
+    result := a + b
+    ch <- result  // Send result to the channel
+}
+
+func main() {
+    ch := make(chan int)  // Create a channel for int values
+
+    // Start two concurrent goroutines
+    go sum(2, 3, ch)
+    go sum(5, 7, ch)
+
+    // Receive/obtain result from chan and print the results from both goroutines
+    result1 := <-ch
+    result2 := <-ch
+
+    fmt.Println("Results:", result1, result2)
+}
+```
+In this example:
+- Two `goroutines` are launched to perform the `sum` function concurrently.
+- A shared channel `ch` is used to send the results from the `goroutines` back to the main function.
+- *The `main` function ***waits*** for the values from both `goroutines` using `<-ch`*.
+
+**Buffered vs. Unbuffered Channels:**
+- **Unbuffered channels**: The sender and receiver must be ready at the same time. The `goroutine` sending data **will block until the receiver is ready to receive the value**.
+- **Buffered channels**: You can **define a buffer size**, allowing the channel **to store multiple values before blocking**.
+
+*Example of a Buffered Channel*:
+```go
+ch := make(chan int, 2)  // Create a buffered channel with size 2
+ch <- 1
+ch <- 2  // Both sends are non-blocking as the buffer is not full
+```
+
+⚠️ **Buffered channels allow sending and receiving of values without immediate synchronization between `goroutines` if the buffer is not full**.
+
+**Closing Channels:**
+Channels can be **closed** when no more values will be sent:
+```go
+close(ch)
+```
+**Once a channel is closed**, no more values can be sent, but **remaining values can still be received**. *Receiving from a closed channel returns the zero value for the channel’s type*, e.g.:
+```go
+ch := make(chan int, 2)
+ch <- 10
+close(ch)
+
+val, ok := <-ch  // ok will be true if value was received
+fmt.Println(val, ok)
+
+val, ok = <-ch  // ok will be false as the channel is closed
+fmt.Println(val, ok)
+```
+
+**Select Statement:**
+The `select` statement is **used to wait on multiple channel operations**. It **blocks until one of its cases can proceed**, making it **useful for handling multiple concurrent channels**, e.g.:
+```go
+func main() {
+    ch1 := make(chan string)
+    ch2 := make(chan string)
+
+    go func() {
+        ch1 <- "Message from ch1"
+    }()
+
+    go func() {
+        ch2 <- "Message from ch2"
+    }()
+
+    select {
+    case msg1 := <-ch1:
+        fmt.Println(msg1)
+    case msg2 := <-ch2:
+        fmt.Println(msg2)
+    }
+}
+```
+Here, `select` listens to both channels, and ⚠️ **whichever one receives a message First will trigger its corresponding case**. This is **useful for non-blocking concurrent operations**.
+
+***Summary***
+- **`Goroutines`** allow functions to run concurrently, managed efficiently by Go's runtime.
+- **Channels** provide a way for `goroutines` to communicate and synchronize.
+- **Unbuffered channels** require **simultaneous sending and receiving**, while **buffered channels** can **store values**.
+- The `select` statement is used **for multiplexing channels**, allowing you to wait for multiple channel operations concurrently.
+
+**Concurrency* and Parallelism** in terms of CPU cores:
+
+| **Aspect**              | **Concurrency**                                             | **Parallelism**                                          |
+|-------------------------|-------------------------------------------------------------|----------------------------------------------------------|
+| **Definition**           | Managing multiple tasks by interleaving their execution.    | Running multiple tasks at the same exact time.            |
+| **CPU Cores**           | Can be done on a single core by rapidly switching between tasks (context switching). | Requires multiple cores to run tasks simultaneously.      |
+| **Task Execution**       | Tasks progress independently but not necessarily simultaneously. | Tasks execute simultaneously on different cores.          |
+| **Example**             | `Goroutines` sharing a single core, switching between them.    | `Goroutines` running on multiple cores, executing in parallel. |
+| **System Requirement**   | Doesn't require multiple cores; can be achieved with one core. | Requires a multi-core CPU to achieve true parallelism.     |
+| **Analogy**             | Juggling multiple tasks but only working on one at a time.   | Multiple workers performing tasks simultaneously.         |
+| **Go Example**          | Multiple `goroutines` on a single core, interleaving execution. | `Goroutines` running on different cores, using `GOMAXPROCS` to utilize multiple cores. |
+
+***The main advantage in Go programming is that Concurrency is cheap and Easy*** 
+
+**Synchronization:**
+
+The **main thread doesn't wait for the other threads to finish** their execution and for that **synchronization is needed**.
+
+`WaitGroup` waits for the launched `goroutines` to finish their execution. Package `sync` provides basic synchronization functions.
+- **Add(n):** Sets the number of `goroutines` to wait for (increases the counter by the provided value).
+- **Wait:** Blocks until the `WaitGroup` counter is "0".
+- **Done:** Decrements the `WaitGroup` counter by "1", this is called by the `goroutine` to indicate that it's finished.
+```go
+var wg sync.WaitGroup
+
+wg.Add(2)  // Expecting two goroutines
+
+go func() {
+    // Mark goroutine as done, it awlays executes a the end of the function.
+    // Same as writting it at the end but if there is a en error it can be bypassed so a good practice is to defer the call:
+    defer wg.Done()  
+    // Do some work
+}()
+
+go func() {
+    defer wg.Done()
+    // Do some work
+}()
+
+wg.Wait()  // Wait for both goroutines to finish
+```
+In this example, the program waits for both `goroutines` to complete before proceeding.
+
+**Go is using, what's called "Green thread"**, i.e. an abstraction of an actual thread.
+
+| **Aspect**                | **`Goroutines`**                                           | **OS Threads**                                           |
+|---------------------------|----------------------------------------------------------|----------------------------------------------------------|
+| **Creation Overhead**     | Lightweight, minimal overhead.                          | Heavier, more resource-intensive.                        |
+| **Scheduling**            | Managed by Go runtime, efficient with many `goroutines`.  | Managed by the OS, less efficient for large numbers.     |
+| **Context Switching**     | Fast and low-cost due to smaller stack size.            | Slower and more expensive due to larger stack size.      |
+| **Memory Usage**          | Low memory footprint, small stack size (grows dynamically). | Higher memory usage per thread due to fixed stack size. |
+| **Ease of Use**           | Simple to create and manage with the `go` keyword.       | More complex to manage and requires explicit thread management. |
+| **Concurrency Model**     | Designed for high concurrency with low cost.            | Suited for parallelism but can be more expensive for concurrency. |
+| **Synchronization**       | Channels provide built-in synchronization and communication. | Requires explicit use of synchronization primitives (mutexes, etc.). |
+| **Scaling**               | Scales well with a large number of `goroutines`.          | Limited by the number of available system threads and resources. |

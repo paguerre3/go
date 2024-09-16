@@ -3,6 +3,8 @@ package main
 import (
 	// GO "internal" module:
 	"fmt"
+	"sync"
+	"time"
 
 	// Own module/GO external package:
 	"github.com/paguerre3/gocomp/common"
@@ -13,6 +15,7 @@ import (
 var (
 	remainingTickets uint8 = 30
 	bookings               = make([]domain.User, 0, totalTickets) // len=0 (initial size), cap=50
+	wg               sync.WaitGroup
 )
 
 const (
@@ -37,6 +40,8 @@ func main() {
 		}
 
 		bookTickets(userFirstName, userLastName, userTickets, userEmail, soldTickets)
+		wg.Add(1)
+		go sendTicket(userTickets, userFirstName, userLastName, userEmail)
 		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
 
 		names := common.GetBookingsByPeopleNames(bookings)
@@ -49,6 +54,9 @@ func main() {
 			break
 		}
 	}
+	fmt.Println("Waiting until all e-mails are sent...")
+	wg.Wait()
+	fmt.Println("Bye!")
 }
 
 func bookTickets(userFirstName string, userLastName string, userTickets uint8, userEmail string, soldTickets uint8) {
@@ -177,4 +185,13 @@ func getUserInputs() (string, string, string, uint8) {
 	fmt.Println("Enter the ammount of tickets to book: ")
 	fmt.Scan(&userTickets)
 	return userFirstName, userLastName, userEmail, userTickets
+}
+
+func sendTicket(userTickets uint8, firstName string, lastName string, email string) {
+	defer wg.Done() // defer executes at the end of teh function always
+	ticket := fmt.Sprintf("%d tickets for %s %s", userTickets, firstName, lastName)
+	fmt.Printf(">>>Sending ticket:\n %s \nto email address %s\n", ticket, email)
+	// simulates time of sending an email:
+	time.Sleep(30 * time.Second)
+	fmt.Printf("<<<Ticket sent to email %s!\n", email)
 }
