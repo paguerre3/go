@@ -14,7 +14,7 @@ import (
 // package level variables:
 var (
 	remainingTickets uint8 = 30
-	bookings               = make([]domain.User, 0, totalTickets) // len=0 (initial size), cap=50
+	bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
 	wg               sync.WaitGroup
 )
 
@@ -33,15 +33,16 @@ func main() {
 	// for remainingTickets > 0 { // loop with true false condition.
 	for {
 		// multiple returns are allowed in go
-		userFirstName, userLastName, userEmail, userTickets := getUserInputs()
-		if vi := common.IsValidInputData(userFirstName, userLastName, userEmail, userTickets, remainingTickets, conferenceName); !vi {
+		//userFirstName, userLastName, userEmail, userTickets := getUserInputs()
+		bookingUser := domain.NewBookingUser(getUserInputs())
+		if vi := bookingUser.IsValidInput(remainingTickets, conferenceName); !vi {
 			// continue to next iteration to try again:
 			continue
 		}
 
-		bookTickets(userFirstName, userLastName, userTickets, userEmail, soldTickets)
+		bookTickets(bookingUser, soldTickets)
 		wg.Add(1)
-		go sendTicket(userTickets, userFirstName, userLastName, userEmail)
+		go sendTicket(bookingUser)
 		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
 
 		names := common.GetBookingsByPeopleNames(bookings)
@@ -59,13 +60,13 @@ func main() {
 	fmt.Println("Bye!")
 }
 
-func bookTickets(userFirstName string, userLastName string, userTickets uint8, userEmail string, soldTickets uint8) {
-	updateBookings(soldTickets, userTickets, userFirstName, userLastName, userEmail)
+func bookTickets(bu domain.BookingUser, soldTickets uint8) {
+	updateBookings(soldTickets, bu)
 	common.DisplayBookings(bookings)
 
 	// recalculate remaining tickets:
-	remainingTickets -= userTickets
-	fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", userFirstName, userLastName, userTickets, userEmail)
+	remainingTickets -= bu.NumberOfTickets()
+	fmt.Printf("User %s %s booked %d tickets. Booking details are send to %s\n", bu.FirstName(), bu.LastName(), bu.NumberOfTickets(), bu.Email())
 }
 
 func initConference() uint8 {
@@ -113,13 +114,8 @@ func initBookings(totalTickets uint8, soldTickets uint8) {
 				}
 				bookings = append(bookings, sd)
 			*/
-			// Structs case:
-			sd := domain.User{
-				FirstName:       "SOLD",
-				LastName:        "SOLD",
-				Email:           "sold@sold.com",
-				NumberOfTickets: soldTickets,
-			}
+			// Interface & Structs case:
+			sd := domain.NewBookingUser("SOLD", "SOLD", "sold@sold.com", soldTickets)
 			bookings = append(bookings, sd)
 		} else {
 			// leave empty avaialble indexes so the len can be smaller that the slice capacity.
@@ -129,8 +125,8 @@ func initBookings(totalTickets uint8, soldTickets uint8) {
 	// bookings = (len=20, cap=50)
 }
 
-func updateBookings(soldTickets uint8, userTickets uint8, userFirstName string, userLastName string, userEmail string) {
-	lastBookIndex := soldTickets + userTickets
+func updateBookings(soldTickets uint8, bu domain.BookingUser) {
+	lastBookIndex := soldTickets + bu.NumberOfTickets()
 	/*
 		// Array case:
 		for i := soldTickets; i < lastBookIndex; i++ {
@@ -158,15 +154,17 @@ func updateBookings(soldTickets uint8, userTickets uint8, userFirstName string, 
 			bookings = append(bookings, userData)
 		}
 	*/
-	// Slice Case usding Struct:
-	user := domain.User{
-		FirstName:       userFirstName,
-		LastName:        userLastName,
-		Email:           userEmail,
-		NumberOfTickets: userTickets,
-	}
+	// Slice Case using Intreface & Struct:
+	/*
+		user := domain.User{
+			FirstName:       userFirstName,
+			LastName:        userLastName,
+			Email:           userEmail,
+			NumberOfTickets: userTickets,
+		}
+	*/
 	for i := soldTickets; i < lastBookIndex; i++ {
-		bookings = append(bookings, user)
+		bookings = append(bookings, bu)
 	}
 }
 
@@ -187,11 +185,11 @@ func getUserInputs() (string, string, string, uint8) {
 	return userFirstName, userLastName, userEmail, userTickets
 }
 
-func sendTicket(userTickets uint8, firstName string, lastName string, email string) {
+func sendTicket(bu domain.BookingUser) {
 	defer wg.Done() // defer executes at the end of teh function always
-	ticket := fmt.Sprintf("%d tickets for %s %s", userTickets, firstName, lastName)
-	fmt.Printf(">>>Sending ticket:\n %s \nto email address %s\n", ticket, email)
+	ticket := fmt.Sprintf("%d tickets for %s %s", bu.NumberOfTickets(), bu.FirstName(), bu.LastName())
+	fmt.Printf(">>>Sending ticket:\n %s \nto email address %s\n", ticket, bu.Email())
 	// simulates time of sending an email:
 	time.Sleep(30 * time.Second)
-	fmt.Printf("<<<Ticket sent to email %s!\n", email)
+	fmt.Printf("<<<Ticket sent to email %s!\n", bu.Email())
 }

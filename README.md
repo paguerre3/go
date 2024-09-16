@@ -656,6 +656,8 @@ Here, `Person` is a struct with `Name` and `Age` fields, and `p` is an instance 
 
 - **Mixed data types** can be defined within a struct (as the opposite to maps that support only one type of values defined during declaration).
 
+- *Go typically encourages passing structs by reference (pointer) when mutation or large data is involved, while small structs that do not need modification can be passed by value to avoid unintended side effects.*
+
 
 ---
 ### `goroutines` - Concurrency
@@ -680,12 +682,14 @@ In this example, both `sayHello()` and `fmt.Println("World")` run concurrently. 
 A **channel** is a typed **conduit through which you can send and receive values between `goroutines`**.
 
 1. **Creating a Channel:**
+
 Channels are created using the `make` function:
 ```go
 ch := make(chan int)  // Creates a channel for int values
 ```
 
 2. **Sending and Receiving Values:**
+
 To **send data** into a channel, use the `<-` operator:
 ```go
 ch <- 42  // Sends the value 42 into the channel
@@ -729,6 +733,7 @@ In this example:
 - *The `main` function ***waits*** for the values from both `goroutines` using `<-ch`*.
 
 **Buffered vs. Unbuffered Channels:**
+
 - **Unbuffered channels**: The sender and receiver must be ready at the same time. The `goroutine` sending data **will block until the receiver is ready to receive the value**.
 - **Buffered channels**: You can **define a buffer size**, allowing the channel **to store multiple values before blocking**.
 
@@ -742,6 +747,7 @@ ch <- 2  // Both sends are non-blocking as the buffer is not full
 ⚠️ **Buffered channels allow sending and receiving of values without immediate synchronization between `goroutines` if the buffer is not full**.
 
 **Closing Channels:**
+
 Channels can be **closed** when no more values will be sent:
 ```go
 close(ch)
@@ -760,6 +766,7 @@ fmt.Println(val, ok)
 ```
 
 **Select Statement:**
+
 The `select` statement is **used to wait on multiple channel operations**. It **blocks until one of its cases can proceed**, making it **useful for handling multiple concurrent channels**, e.g.:
 ```go
 func main() {
@@ -785,6 +792,7 @@ func main() {
 Here, `select` listens to both channels, and ⚠️ **whichever one receives a message First will trigger its corresponding case**. This is **useful for non-blocking concurrent operations**.
 
 ***Summary***
+
 - **`Goroutines`** allow functions to run concurrently, managed efficiently by Go's runtime.
 - **Channels** provide a way for `goroutines` to communicate and synchronize.
 - **Unbuffered channels** require **simultaneous sending and receiving**, while **buffered channels** can **store values**.
@@ -845,3 +853,99 @@ In this example, the program waits for both `goroutines` to complete before proc
 | **Concurrency Model**     | Designed for high concurrency with low cost.            | Suited for parallelism but can be more expensive for concurrency. |
 | **Synchronization**       | Channels provide built-in synchronization and communication. | Requires explicit use of synchronization primitives (mutexes, etc.). |
 | **Scaling**               | Scales well with a large number of `goroutines`.          | Limited by the number of available system threads and resources. |
+
+
+---
+### Interfaces and Structs
+
+In Go, the relationship between **structs** and **interfaces** is foundational to the language’s approach to type systems and polymorphism.
+
+1. **Structs**:
+A **struct** is a collection of fields that can hold data. Structs are **used to define custom data types** that group related data together, e.g.:
+```go
+type Car struct {
+    brand string
+    year  int
+}
+```
+In the above example, `Car` is a struct with two fields, `brand` and `year`.
+
+2. **Interfaces**:
+An **interface** is a type that **specifies a set of method signatures**. **"Any type" that implements these methods is said to "satisfy" the interface**. Unlike in other languages, ⚠️ **Go does not require you to explicitly declare that a type implements an interface**; if a type has all the methods the interface requires, it automatically satisfies the interface, e.g.:
+```go
+type Vehicle interface {
+    Drive() string
+}
+```
+Here, `Vehicle` is an interface that requires a `Drive()` method returning a string.
+
+3. **Implementing Interfaces with Structs**:
+A **struct can implement an interface by defining methods that match the interface’s method signatures**. In Go, there's no need to use a keyword like `implements`; ⚠️ **it is done implicitly by providing the correct method signatures**, e.g.:
+```go
+func (c Car) Drive() string {
+    return "Driving a " + c.brand
+}
+```
+In this case, the `Car` struct implements the `Vehicle` interface by providing a `Drive` method. This allows `Car` to be treated as a `Vehicle`.
+
+4. **Custom Instantiation**:
+You can create factory-like functions that return interfaces. **This allows the function to return different types that satisfy the interface, without the caller needing to know the specific type**.
+```go
+// Custom instantiation function that returns a Vehicle interface
+func NewCar(brand string) Vehicle {
+    return Car{brand: brand}
+}
+```
+In this example, `NewCar()` creates an instance of the `Car` struct and returns it as a `Vehicle`. Since `Car` implements the `Vehicle` interface, the returned type can be used in contexts where a `Vehicle` is expected, providing polymorphism.
+
+5. **Polymorphism**:
+**Polymorphism refers to the ability to treat different types as the same interface type**, allowing you to write more general and flexible code.
+```go
+func printVehicleInfo(v Vehicle) {
+    fmt.Println(v.Drive())
+}
+
+func main() {
+    myCar := NewCar("Tesla")
+    printVehicleInfo(myCar)  // Output: Driving a Tesla
+}
+```
+Here, `printVehicleInfo` accepts any type that implements the `Vehicle` interface, so you can pass different struct types that implement `Vehicle` without changing the function.
+
+***Key Points:***
+
+- **Structs** define concrete data types.
+- **Interfaces define a set of behaviors (methods) without specifying the underlying data type**.
+- Go interfaces are **implicit**: if a type implements the required methods, it automatically satisfies the interface.
+- Using **custom instantiation** functions can abstract the creation of structs while returning interface types, allowing flexibility in the underlying implementation.
+
+This allows Go to achieve polymorphism while maintaining simplicity and flexibility in its type system.
+
+
+---
+### Data types and recommendations on when to pass them by value or reference
+
+| **Data Type**     | **Pass by Value**                               | **Pass by Reference (Pointer)**                          |
+|-------------------|-------------------------------------------------|----------------------------------------------------------|
+| **Basic types**   | (int, float, bool, string)                      | N/A (basic types are small and cheap to copy)             |
+|                   | **When to use:** Always pass by value.          |                                                          |
+| **Structs**       | **When the struct is small (few fields)**       | **When the struct is large or complex (many fields/nested structs)** |
+|                   | Protects the original data from modification.   | More efficient for large structs, avoids copying overhead.|
+| **Arrays**        | **When the array is small**                     | **For large arrays or if modifications are needed**       |
+|                   | Arrays are copied by default when passed by value. | Pass by reference to avoid copying large arrays.         |
+| **Slices**        | **Rarely (internally passed by reference)**     | **Modify elements or append to slice**                   |
+|                   | Safe to pass by value, but generally passed as a reference due to underlying array. | Changes reflect in the original slice.                   |
+| **Maps**          | **Rarely (maps are reference types)**           | **Always passed as a reference**                         |
+|                   | Maps are internally passed by reference, even when passed by value. | Modifications reflect in the original map.               |
+| **Channels**      | **Always passed by value**                      | **N/A (channels are reference types)**                   |
+|                   | Channels are lightweight, passing by value does not copy the underlying data. |                                                          |
+| **Pointers**      | **N/A**                                         | **Always passed as a reference**                         |
+|                   | Pointers themselves are small values and can be passed directly. | Pass pointer if you want to modify the underlying value.  |
+| **Interfaces**    | **Always passed by value (points to data)**     | **N/A (interfaces are reference types)**                 |
+|                   | Interfaces store type information and a pointer to the underlying data. |                                                          |
+
+***Key Considerations:***
+
+- **Small types** like integers, booleans, and small structs can be passed by value, as copying them is cheap and protects the original data from being modified.
+- **Large types** like large structs, arrays, and slices should generally be passed by reference to avoid the performance overhead of copying.
+- **Reference types** like **maps, slices, channels, and interfaces are passed by value (descriptor is passed by value)**, but they internally reference the same underlying data, meaning modifications affect the original.

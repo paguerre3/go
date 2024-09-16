@@ -7,7 +7,7 @@ import (
 )
 
 // Booking Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
-func GetBookingsByPeopleNames(bookings []domain.User) []string {
+func GetBookingsByPeopleNames(bookings []domain.BookingUser) []string {
 	ns := []string{} // ns is a local variable declared within "the function"
 	// this is valid as no resize is done in the slice (simply a slice iteration to display values instead or appending)
 	// but if there is a resize/update then a new array is built and changes won't be reflected until because a
@@ -31,15 +31,15 @@ func GetBookingsByPeopleNames(bookings []domain.User) []string {
 				ns = append(ns, fmt.Sprintf("%s %s", booking["firstName"], booking["lastName"]))
 			}
 		*/
-		// Structs case:
-		if booking.FirstName != "SOLD" {
-			ns = append(ns, fmt.Sprintf("%s %s", booking.FirstName, booking.LastName))
+		// Interface & Structs case:
+		if booking.FirstName() != "SOLD" {
+			ns = append(ns, fmt.Sprintf("%s %s", booking.FirstName(), booking.LastName()))
 		}
 	}
 	return ns
 }
 
-func DisplayBookings(bookings []domain.User) {
+func DisplayBookings(bookings []domain.BookingUser) {
 	fmt.Printf("The whole Bookings collection: %v\n", bookings)
 	fmt.Print("Bookings display indexed: {")
 	for i := 0; i < len(bookings); i++ {
