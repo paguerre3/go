@@ -790,7 +790,7 @@ Here, `select` listens to both channels, and ⚠️ **whichever one receives a m
 - **Unbuffered channels** require **simultaneous sending and receiving**, while **buffered channels** can **store values**.
 - The `select` statement is used **for multiplexing channels**, allowing you to wait for multiple channel operations concurrently.
 
-**Concurrency* and Parallelism** in terms of CPU cores:
+**Concurrency and Parallelism** in terms of CPU cores:
 
 | **Aspect**              | **Concurrency**                                             | **Parallelism**                                          |
 |-------------------------|-------------------------------------------------------------|----------------------------------------------------------|
