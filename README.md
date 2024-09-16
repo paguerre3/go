@@ -1065,3 +1065,94 @@ This allows Go to achieve polymorphism while maintaining simplicity and flexibil
 - **Small types** like integers, booleans, and small structs can be passed by value, as copying them is cheap and protects the original data from being modified.
 - **Large types** like large structs, arrays, and slices should generally be passed by reference to avoid the performance overhead of copying.
 - **Reference types** like **maps, slices, channels, and interfaces are passed by value (descriptor is passed by value)**, but they internally reference the same underlying data, meaning modifications affect the original.
+
+
+---
+### Error handling
+
+Go uses a unique approach to error handling compared to traditional exception-based languages. Instead of exceptions, **Go uses explicit return values to handle errors**, providing a clear and explicit mechanism for managing errors at each step.
+
+1. **Error Type:**
+
+Go has a built-in **`error`** type, which is an interface that can be implemented to describe an error. It typically returns `nil` if there’s no error, or an instance of an error if something goes wrong, i.e.:
+```go
+type error interface {
+    Error() string
+}
+```
+
+2. **Returning Errors:**
+
+**Functions often return a value and an error**. The caller is responsible for checking if the error is `nil` to determine if the operation succeeded, e.g.:
+```go
+func divide(a, b int) (int, error) {
+    if b == 0 {
+        return 0, fmt.Errorf("cannot divide by zero")
+    }
+    return a / b, nil
+}
+
+result, err := divide(10, 0)
+if err != nil {
+    fmt.Println("Error:", err)
+} else {
+    fmt.Println("Result:", result)
+}
+```
+
+3. **Error Wrapping (Go 1.13+):**
+
+Go 1.13 introduced **error wrapping** with the `%w` verb in the `fmt.Errorf` function, which allows errors to be wrapped and unwrapped for better context and debugging.
+```go
+err := fmt.Errorf("an error occurred: %w", originalErr)
+```
+The `errors.Unwrap` function can be used to retrieve the original error, and `errors.Is` checks if a specific error is in the error chain.
+
+4. **Custom Errors:**
+
+You can create custom error types by implementing the `Error()` method for more specific error handling, e.g.:
+```go
+type CustomError struct {
+    Msg string
+}
+
+func (e *CustomError) Error() string {
+    return e.Msg
+}
+
+func doSomething() error {
+    return &CustomError{"something went wrong"}
+}
+
+err := doSomething()
+if err != nil {
+    fmt.Println(err)
+}
+```
+
+5. **Panic and Recover:**
+
+Go provides the **`panic`** and **`recover`** functions **for handling unrecoverable errors or exceptional situations**. However, they are **not used for general error handling but rather for catastrophic failures or conditions that should halt the program**.
+
+- **Panic**: Immediately stops the program and starts the process of unwinding the stack.
+- **Recover**: Used within a deferred function to regain control of a panicking `goroutine`.
+```go
+func riskyOperation() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from panic:", r)
+        }
+    }()
+    panic("Something went terribly wrong!")
+}
+
+riskyOperation()
+```
+
+6. **Best Practices:**
+
+- Always check for errors returned by functions.
+- Return meaningful error messages for better debugging.
+- Use `panic` and `recover` sparingly, typically for program crashes or system-level errors.
+
+Go's explicit error handling promotes clear and concise error management while encouraging developers to think about error handling at every function call.
