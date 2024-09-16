@@ -611,4 +611,30 @@ func GetBookingsByPeopleNames(bookings []string) []string {
 
 - Encapsulated code into functions.
 - Divided code into multiple files.
+
+
 ---
+## Maps
+
+Maps are built-in data structures that **store key-value pairs**. A map is created using the `make` function or by using a map literal. The keys must be of a type that supports equality comparison, and the values can be of any type, e.g.:
+```go
+myMap := make(map[string]int)
+myMap["age"] = 30
+```
+Or using a map literal:
+```go
+myMap := map[string]int{"age": 30}
+```
+In this example, `"age"` is the key, and `30` is the value. Maps allow quick lookups, inserts, and deletions by key.
+
+Other example:
+```go
+	var userData = make(map[string]string)
+	userData["firstName"] = userFirstName
+	userData["lastName"] = userLastName
+	userData["email"] = userEmail
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
+	for i := soldTickets; i < lastBookIndex; i++ {
+		bookings = append(bookings, userData)
+	}
+```

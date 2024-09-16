@@ -3,6 +3,8 @@ package main
 import (
 	// GO "internal" module:
 	"fmt"
+	"strconv"
+
 	// Own module/GO external package:
 	"github.com/paguerre3/gocomp/common"
 )
@@ -10,7 +12,7 @@ import (
 // package level variables:
 var (
 	remainingTickets uint8 = 30
-	bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
+	bookings               = make([]map[string]string, 0, totalTickets) // len=0 (initial size), cap=50
 )
 
 const (
@@ -89,7 +91,18 @@ func initBookings(totalTickets uint8, soldTickets uint8) {
 			// The append built-in function appends elements to the end of a slice.
 			// If it has sufficient capacity, the destination is resliced to accommodate the new elements.
 			// If it does not, a new underlying array will be allocated
-			bookings = append(bookings, "SOLD")
+			/*
+				// legacy string case
+				//bookings = append(bookings, "SOLD")
+			*/
+			// Map case:
+			sd := map[string]string{
+				"firstName":       "SOLD",
+				"lastName":        "SOLD",
+				"email":           "sold@sold.com",
+				"numberOfTickets": fmt.Sprintf("%d", soldTickets),
+			}
+			bookings = append(bookings, sd)
 		} else {
 			// leave empty avaialble indexes so the len can be smaller that the slice capacity.
 			break
@@ -110,9 +123,21 @@ func updateBookings(soldTickets uint8, userTickets uint8, userFirstName string, 
 			}
 		}
 	*/
-	// Slice Case:
+	/*
+		// Slice Case:
+		for i := soldTickets; i < lastBookIndex; i++ {
+			bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
+		}
+	*/
+	// Slice Case using Maps:
+	var userData = make(map[string]string)
+	userData["firstName"] = userFirstName
+	userData["lastName"] = userLastName
+	userData["email"] = userEmail
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
 	for i := soldTickets; i < lastBookIndex; i++ {
-		bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
+		//bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
+		bookings = append(bookings, userData)
 	}
 }
 
