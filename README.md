@@ -912,7 +912,7 @@ func main() {
 ```
 Here, `printVehicleInfo` accepts any type that implements the `Vehicle` interface, so you can pass different struct types that implement `Vehicle` without changing the function.
 
-A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference (used for larger data structs not exposed, i.e. not returned by functions):
+⚠️ **A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference** (used for larger data structs not exposed, i.e. not returned by functions):
 ```go
 package domain
 
