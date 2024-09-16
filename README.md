@@ -518,3 +518,99 @@ func main() {
 ```
 
 ⚠️ **Best Practice is to define Variables as "local as possible"**, i.e. create the variable when you need it (the previous example is considered bad practice). **Local variables** are defined **inside a function or block**. They can be accessed only inside the function or block of code.
+
+
+---
+## Packages and Scopes
+
+Modularization can be achieved using Packages, i.e. GO programs are organized into packages.
+A **Package is a collection of GO files**, a.k.a. a single module. 
+
+- ⚠️ **Scope: Variables and Functions**, defined outside any function, **can be accessed in all other files within the same package**. 
+- **Sharing across packages**: Using Upper Camel case for Public members or functions while Lower Camel Case for Private members or functions, i.e. **Upper Camel Case** in case of **exposing a member or function outside the package**, i.e. **exporting a function or variables** simply **Capitalizing the first letter**.
+- ⚠️ Importing a package is done using `import` keyword, but the import path should be **a valid path** in case of reusing a package of the own program, i.e. `import "github.com/yourusername/yourgoproject"` or `import "github.com/yourusername/yourgoproject/yourmodule"`, e.g. `"import github.com/paguerre3/gocomp/common"`. ***Note doing only `yourmodule` (`commom`), will not work*** as GO will search for the package in GO internals, so instead you must place your own project/main module domain at the beginning as it is defined under `go.mod`, e.g. `module github.com/paguerre3/gocomp`.
+```go
+package main
+
+import (
+	// GO "internal" module:
+	"fmt"
+	// Own module/GO extrenal package:
+	"github.com/paguerre3/gocomp/common"
+)
+
+// package level variables:
+var (
+	remainingTickets uint8 = 30
+	bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
+)
+
+const (
+	conferenceName       = "Go Conference"
+	totalTickets   uint8 = 50
+)
+
+func main() {
+
+	// multiple retunrs are allowed in go
+	soldTickets := initConference()
+	common.DisplayBookings(bookings)
+    
+    // more code here
+}	
+```
+
+**3 Levels of Scope:**
+
+1. **Local member:** 
+- Declaration **within function**, i.e. **Can be used** only within that function.
+- Declaration **within block**, i.e. **Cannot be used** only within block, e.g. `for`, `if-else`, etc.
+```go
+func GetBookingsByPeopleNames(bookings []string) []string {
+	ns := []string{} // ns is a local variable declared within "the function"
+	// this is valid as no resize is done in the slice (simply a slice iteration to display values instead or appending)
+	// but if there is a resize/update then a new array is built and changes won't be reflected until because a
+	// variable is in the Local Function Frame of the Memory Stack unless a "new return" is providid
+	// and then updating the package level variable (otherwise remove passing the slice as a reference
+	// so the local/shadowed variable problem is avoided):
+	for _, booking := range bookings {
+		// strings.Fields(booking):
+		// Fields splits the string s around each instance of one or more consecutive white space characters,
+		// as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
+		fields := strings.Fields(booking) // fields is a local variable declared within the "for" block
+		if len(fields) > 0 && fields[0] != "SOLD" {
+			ns = append(ns, fmt.Sprintf("%s %s", fields[1], fields[2]))
+		}
+	}
+	return ns
+}
+```
+
+2. **Package member:**
+- Declaration **outside all functions** in same module, i.e. ⚠️ **Can be used in all other files within the same package**.
+```go
+// package level variables:
+var (
+	remainingTickets uint8 = 30
+	bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
+)
+
+// package level function starts with lower case letter:
+func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
+	return totalTickets - remainingTickets
+}
+```	 
+
+3. **Global member:**
+- Declaration **outside all functions & upper case 1st letter**, i.e. **Can be used everywhere across all packages** (and its files).
+```go
+func GetBookingsByPeopleNames(bookings []string) []string { 
+    // more code here 
+}
+```
+
+***Variable Scope is the region of a program where a defined variable can be accessed***
+
+- Encapsulated code into functions.
+- Divided code into multiple files.
+---

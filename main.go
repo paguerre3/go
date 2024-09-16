@@ -1,8 +1,10 @@
 package main
 
 import (
+	// GO "internal" module:
 	"fmt"
-	"strings"
+	// Own module/GO external package:
+	"github.com/paguerre3/gocomp/common"
 )
 
 // package level variables:
@@ -20,7 +22,7 @@ func main() {
 
 	// multiple retunrs are allowed in go
 	soldTickets := initConference()
-	displayBookings()
+	common.DisplayBookings(bookings)
 
 	greetUsers(soldTickets)
 
@@ -28,7 +30,7 @@ func main() {
 	// for remainingTickets > 0 { // loop with true false condition.
 	for {
 		userFirstName, userLastName, userEmail, userTickets := getUserInputs()
-		if vi := isValidInputData(userFirstName, userLastName, userEmail, userTickets); !vi {
+		if vi := common.IsValidInputData(userFirstName, userLastName, userEmail, userTickets, remainingTickets, conferenceName); !vi {
 			// continue to next iteration to try again:
 			continue
 		}
@@ -36,7 +38,7 @@ func main() {
 		bookTickets(userFirstName, userLastName, userTickets, userEmail, soldTickets)
 		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
 
-		names := getBookingsByPeopleNames(bookings)
+		names := common.GetBookingsByPeopleNames(bookings)
 		fmt.Println("All Bookings by People names: ", names)
 
 		fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d.\n", conferenceName, remainingTickets, soldTickets)
@@ -50,7 +52,7 @@ func main() {
 
 func bookTickets(userFirstName string, userLastName string, userTickets uint8, userEmail string, soldTickets uint8) {
 	updateBookings(soldTickets, userTickets, userFirstName, userLastName, userEmail)
-	displayBookings()
+	common.DisplayBookings(bookings)
 
 	// recalculate remaining tickets:
 	remainingTickets -= userTickets
@@ -77,6 +79,7 @@ func greetUsers(soldTickets uint8) {
 	fmt.Printf("Remaining tickets for %s are %d. Tickets sold %d. Get your tickets now!\n", conferenceName, remainingTickets, soldTickets)
 }
 
+// package level function starts with lower case letter:
 func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
 	return totalTickets - remainingTickets
 }
@@ -114,48 +117,6 @@ func updateBookings(soldTickets uint8, userTickets uint8, userFirstName string, 
 	}
 }
 
-func displayBookings() {
-	fmt.Printf("The whole Bookings collection: %v\n", bookings)
-	fmt.Print("Bookings display indexed: {")
-	for i := 0; i < len(bookings); i++ {
-		fmt.Printf("[%d]=%s", i, bookings[i])
-		if i == len(bookings)-1 {
-			fmt.Println("}")
-		} else {
-			fmt.Print(", ")
-		}
-	}
-	fmt.Printf("Collection type is %T, length is %d and capacity is %d\n", bookings, len(bookings), cap(bookings))
-}
-
-func isValidInputData(userFirstName string, userLastName string, userEmail string, userTickets uint8) (vi bool) {
-	isValidUserName := len(userFirstName) >= 2 && len(userLastName) >= 2
-	vi = true
-	if !isValidUserName {
-		fmt.Println("Please enter a valid name")
-		vi = false
-	}
-
-	isValidEmail := len(userEmail) > 3 && strings.Contains(userEmail, "@")
-	if !isValidEmail {
-		fmt.Println("Please enter a valid email address")
-		vi = false
-	}
-
-	isValidTicket := userTickets > 0
-	if !isValidTicket {
-		fmt.Println("Please enter a valid number of tickets")
-		vi = false
-	}
-
-	// validate avaibaility:
-	if userTickets > remainingTickets {
-		fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
-		vi = false
-	}
-	return vi
-}
-
 func getUserInputs() (string, string, string, uint8) {
 	var userFirstName, userLastName, userEmail string
 	var userTickets uint8
@@ -171,22 +132,4 @@ func getUserInputs() (string, string, string, uint8) {
 	fmt.Println("Enter the ammount of tickets to book: ")
 	fmt.Scan(&userTickets)
 	return userFirstName, userLastName, userEmail, userTickets
-}
-
-// Booking Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
-func getBookingsByPeopleNames(bookings []string) []string {
-	ns := []string{}
-	// this is valid as no resize is done in the slice (simply a slice iteration to display values)
-	// but if there is a resize/update/new array is built the changes won't be reflected until a
-	// new return update the package level variable:
-	for _, booking := range bookings {
-		// strings.Fields(booking):
-		// Fields splits the string s around each instance of one or more consecutive white space characters,
-		// as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
-		fields := strings.Fields(booking)
-		if len(fields) > 0 && fields[0] != "SOLD" {
-			ns = append(ns, fmt.Sprintf("%s %s", fields[1], fields[2]))
-		}
-	}
-	return ns
 }
