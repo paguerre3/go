@@ -2,10 +2,12 @@ package common
 
 import (
 	"fmt"
+
+	"github.com/paguerre3/gocomp/domain"
 )
 
 // Booking Slice by reference, i.e. the Slice Descriptor pointing to the underlying array.
-func GetBookingsByPeopleNames(bookings []map[string]string) []string {
+func GetBookingsByPeopleNames(bookings []domain.User) []string {
 	ns := []string{} // ns is a local variable declared within "the function"
 	// this is valid as no resize is done in the slice (simply a slice iteration to display values instead or appending)
 	// but if there is a resize/update then a new array is built and changes won't be reflected until because a
@@ -23,15 +25,21 @@ func GetBookingsByPeopleNames(bookings []map[string]string) []string {
 				ns = append(ns, fmt.Sprintf("%s %s", fields[1], fields[2]))
 			}
 		*/
-		// Map case:
-		if booking["firstName"] != "SOLD" {
-			ns = append(ns, fmt.Sprintf("%s %s", booking["firstName"], booking["lastName"]))
+		/*
+			// Map case:
+			if booking["firstName"] != "SOLD" {
+				ns = append(ns, fmt.Sprintf("%s %s", booking["firstName"], booking["lastName"]))
+			}
+		*/
+		// Structs case:
+		if booking.FirstName != "SOLD" {
+			ns = append(ns, fmt.Sprintf("%s %s", booking.FirstName, booking.LastName))
 		}
 	}
 	return ns
 }
 
-func DisplayBookings(bookings []map[string]string) {
+func DisplayBookings(bookings []domain.User) {
 	fmt.Printf("The whole Bookings collection: %v\n", bookings)
 	fmt.Print("Bookings display indexed: {")
 	for i := 0; i < len(bookings); i++ {

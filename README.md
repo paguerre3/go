@@ -638,3 +638,20 @@ for i := soldTickets; i < lastBookIndex; i++ {
     bookings = append(bookings, userData)
 }
 ```
+
+
+---
+# Structs
+A struct is a composite data type that groups together fields (variables) under one name. 
+Each field has a name and a type, and **structs are commonly used to define custom types**, e.g.:
+```go
+type Person struct {
+    Name string
+    Age  int
+}
+
+p := Person{Name: "Alice", Age: 30}
+```
+Here, `Person` is a struct with `Name` and `Age` fields, and `p` is an instance of `Person`. Structs help organize related data.
+
+- **Mixed data types** can be defined within a struct (as the opposite to maps that support only one type of values defined during declaration).

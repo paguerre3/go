@@ -3,16 +3,16 @@ package main
 import (
 	// GO "internal" module:
 	"fmt"
-	"strconv"
 
 	// Own module/GO external package:
 	"github.com/paguerre3/gocomp/common"
+	"github.com/paguerre3/gocomp/domain"
 )
 
 // package level variables:
 var (
 	remainingTickets uint8 = 30
-	bookings               = make([]map[string]string, 0, totalTickets) // len=0 (initial size), cap=50
+	bookings               = make([]domain.User, 0, totalTickets) // len=0 (initial size), cap=50
 )
 
 const (
@@ -95,12 +95,22 @@ func initBookings(totalTickets uint8, soldTickets uint8) {
 				// legacy string case
 				//bookings = append(bookings, "SOLD")
 			*/
-			// Map case:
-			sd := map[string]string{
-				"firstName":       "SOLD",
-				"lastName":        "SOLD",
-				"email":           "sold@sold.com",
-				"numberOfTickets": fmt.Sprintf("%d", soldTickets),
+			/*
+				// Map case:
+				sd := map[string]string{
+					"firstName":       "SOLD",
+					"lastName":        "SOLD",
+					"email":           "sold@sold.com",
+					"numberOfTickets": fmt.Sprintf("%d", soldTickets),
+				}
+				bookings = append(bookings, sd)
+			*/
+			// Structs case:
+			sd := domain.User{
+				FirstName:       "SOLD",
+				LastName:        "SOLD",
+				Email:           "sold@sold.com",
+				NumberOfTickets: soldTickets,
 			}
 			bookings = append(bookings, sd)
 		} else {
@@ -129,15 +139,26 @@ func updateBookings(soldTickets uint8, userTickets uint8, userFirstName string, 
 			bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
 		}
 	*/
-	// Slice Case using Maps:
-	var userData = make(map[string]string)
-	userData["firstName"] = userFirstName
-	userData["lastName"] = userLastName
-	userData["email"] = userEmail
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
+	/*
+		// Slice Case using Maps:
+		var userData = make(map[string]string)
+		userData["firstName"] = userFirstName
+		userData["lastName"] = userLastName
+		userData["email"] = userEmail
+		userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) // 10 is used for decimal formatting
+		for i := soldTickets; i < lastBookIndex; i++ {
+			bookings = append(bookings, userData)
+		}
+	*/
+	// Slice Case usding Struct:
+	user := domain.User{
+		FirstName:       userFirstName,
+		LastName:        userLastName,
+		Email:           userEmail,
+		NumberOfTickets: userTickets,
+	}
 	for i := soldTickets; i < lastBookIndex; i++ {
-		//bookings = append(bookings, fmt.Sprintf("SOLD-TO %s %s W/E-MAIL %s", userFirstName, userLastName, userEmail))
-		bookings = append(bookings, userData)
+		bookings = append(bookings, user)
 	}
 }
 
