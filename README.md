@@ -1558,5 +1558,5 @@ By following these conventions, your tests will be clearer, easier to maintain, 
 - [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
 - [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd-api)
 - [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-example)
-- [Client lib example](https://github.com/paguerre3/faccounts)
+- [Library client example](https://github.com/paguerre3/faccounts)
 - [GO Standards](https://github.com/golang-standards/project-layout)
