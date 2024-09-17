@@ -1364,3 +1364,63 @@ func sum(nums ...int) int {
 You can call it with any number of integers: `sum(1, 2, 3)`.
 - **Arguments** are treated as a slice inside the function.
 - It can still have regular parameters before the variadic parameter.
+
+
+---
+# Reunes
+
+A **rune** is an alias for the `int32` type and **represents a Unicode code point**. Runes are used to handle characters beyond basic ASCII, **allowing Go to work with multilingual text and special symbols**.
+
+***Key Points:***
+
+- A rune represents a single Unicode character.
+- Go strings are UTF-8 encoded, so indexing a string gives you a byte, not a rune.
+- To work with individual characters, you convert a string into a slice of runes.
+
+Example that demonstrates how to use **`utf8` package to work with UTF-8 encoded strings, particularly for counting runes and decoding individual characters**:
+```go
+package main
+
+import (
+	"fmt"
+	"unicode/utf8"
+)
+
+func main() {
+	str := "Hello, 世界"
+
+	// Get the number of runes (Unicode code points) in the string
+	runeCount := utf8.RuneCountInString(str)
+	fmt.Printf("The string '%s' has %d runes.\n", str, runeCount)
+
+	// Decode each rune in the string and print its value
+	fmt.Println("Runes in the string:")
+	for i, w := 0, 0; i < len(str); i += w {
+		r, width := utf8.DecodeRuneInString(str[i:])
+		fmt.Printf("Rune: %c, starts at byte position %d, width: %d bytes\n", r, i, width)
+		w = width
+	}
+}
+```
+
+**Explanation:**
+
+- `utf8.RuneCountInString(str)` counts the number of runes in the UTF-8 encoded string.
+- `utf8.DecodeRuneInString` reads one rune (character) at a time and returns the rune and its width in bytes. This is useful for iterating over multi-byte characters like "世界".
+
+Output:
+```
+The string 'Hello, 世界' has 9 runes.
+Runes in the string:
+Rune: H, starts at byte position 0, width: 1 bytes
+Rune: e, starts at byte position 1, width: 1 bytes
+Rune: l, starts at byte position 2, width: 1 bytes
+Rune: l, starts at byte position 3, width: 1 bytes
+Rune: o, starts at byte position 4, width: 1 bytes
+Rune: ,, starts at byte position 5, width: 1 bytes
+Rune:  , starts at byte position 6, width: 1 bytes
+Rune: 世, starts at byte position 7, width: 3 bytes
+Rune: 界, starts at byte position 10, width: 3 bytes
+```
+
+Runes allow for easier manipulation of characters in a string.
