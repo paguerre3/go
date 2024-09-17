@@ -26,6 +26,7 @@ Go language compendium
 - [Data types and recommendations on when to pass them by value or reference](#data-types-and-recommendations-on-when-to-pass-them-by-value-or-reference)
 - [Error handling](#error-handling)
 - [Functional programming](#functional-programming)
+- [Generics](#generics)
 
 
 ---
@@ -1291,3 +1292,51 @@ Go is primarily an imperative language but supports **functional programming** f
 ***Conclusion:***
 
 While Go is not a purely functional language, it provides enough tools to enable functional programming techniques. Developers can use closures, first-class functions, and higher-order functions to implement functional patterns, making Go a flexible language that supports both imperative and functional styles.
+
+
+---
+### Generics
+Generics in Go were introduced in Go 1.18, allowing developers to write functions, types, and methods that can work with any type. Here's a brief summary:
+
+**Key Concepts:**
+
+1. **Type Parameters**: Generics are based on type parameters, which allow you to define a function, method, or struct that works with any type. The type parameter is specified in square brackets (`[]`). E.g.:
+   ```go
+   func Print[T any](x T) {
+       fmt.Println(x)
+   }
+   ```
+   Here, `T` is the type parameter, and `any` means it can be any type.
+
+2. **Type Constraints**: You can specify constraints for type parameters to restrict the types that can be used. Go uses *interfaces* as type constraints. E.g:
+   ```go
+   func Add[T int | float64](a, b T) T {
+       return a + b
+   }
+   ```
+   In this case, `T` can only be an `int` or `float64`.
+
+3. **Generic Types**: You can also define generic structs or interfaces. E.g.:
+   ```go
+   type Pair[T any] struct {
+       First  T
+       Second T
+   }
+   ```
+
+4. **Type Inference**: Go can often infer the type parameter based on the arguments passed to a function, making generics more convenient to use. E.g.:
+   ```go
+   Print(10) // Go infers that T is int
+   ```
+
+**Benefits:**
+
+- **Code Reusability**: You can write a single implementation for multiple types.
+- **Type Safety**: Go's type system ensures that the correct types are used, reducing runtime errors.
+
+**Limitations:**
+
+- Generics in Go are designed to be simple, so they are not as flexible or powerful as in languages like Java or C++.
+- No **higher-kinded types** (types that take type parameters themselves).
+
+Generics in Go offer more flexibility while keeping the language's simplicity and performance.
