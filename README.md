@@ -1,6 +1,33 @@
 # Go compendium
 Go language compendium
 
+
+---
+### Index
+- [Why Go?](#why-go)
+- [Why Go Modules Replace GOPATH?](#why-go-modules-replace-gopath)
+- [Go Commands summary](#go-commands-summary)
+- [Module paths for downloadable packages](#module-paths-for-downloadable-packages)
+- [Packages, Variables, and Constants](#packages-variables-and-constants)
+- [Data Types](#data-types)
+- [Pointers](#pointers)
+- [Arrays and Slices](#arrays-and-slices)
+- [Loops](#loops)
+- [Conditionals](#conditionals)
+- [Operators](#operators)
+- [Switch Case](#switch-case)
+- [Memory Stack and Heap](#memory-stack-and-heap)
+- [Functions](#functions)
+- [Packages and Scopes](#packages-and-scopes)
+- [Maps](#maps)
+- [Structs](#structs)
+- [`goroutines` - Concurrency](#goroutines-concurrency)
+- [Interfaces and Structs](#interfaces-and-structs)
+- [Data types and recommendations on when to pass them by value or reference](#data-types-and-recommendations-on-when-to-pass-them-by-value-or-reference)
+- [Error handling](#error-handling)
+- [Functional programming](#functional-programming)
+
+
 ---
 ### Why Go?
 
@@ -48,7 +75,7 @@ Only need to set `GOPATH` in the following cases:
 
 
 ---
-### Module paths for downloadable packages
+### Module paths for downloadable packages:
 
 If you’re creating a project which can be downloaded and used by other people and programs, then it’s good practice for your module path to equal the location that the code can be downloaded from.
 
