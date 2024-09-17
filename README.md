@@ -21,7 +21,7 @@ Go language compendium
 - [Packages and Scopes](#packages-and-scopes)
 - [Maps](#maps)
 - [Structs](#structs)
-- [`goroutines` - Concurrency](#goroutines-concurrency)
+- [`goroutines` - Concurrency](#goroutines---concurrency)
 - [Interfaces and Structs](#interfaces-and-structs)
 - [Data types and recommendations on when to pass them by value or reference](#data-types-and-recommendations-on-when-to-pass-them-by-value-or-reference)
 - [Error handling](#error-handling)
