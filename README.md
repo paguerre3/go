@@ -29,6 +29,7 @@ Go language compendium
 - [Generics](#generics)
 - [Variadic functions](#variadic-functions)
 - [Runes](#runes)
+- [Testing](#testing)
 - [Further Reading](#further-reading)
 
 ---
@@ -1428,6 +1429,52 @@ Rune: 界, starts at byte position 10, width: 3 bytes
 
 Runes allow for easier manipulation of characters in a string.
 
+
+---
+### Testing
+
+Testing is a built-in feature using the `testing` package. **Unit tests are written in files ending with `_test.go`** and **use functions starting with `Test`**. You can also **use assertion libraries like `testify` to simplify test validation**.
+
+**Key Points:**
+
+- **Test Function Naming**: Test functions must start with `Test`, followed by the function name.
+- **Test Files**: Place test functions in files ending with `_test.go`.
+- **Running Tests**: Use `go test` in the terminal to run all tests.
+- **Assertions**: Go’s `testify` library provides cleaner assertions like `assert.Equal`.
+
+*Example using `testify`*:
+
+1. Install `testify`:
+   ```bash
+   go get github.com/stretchr/testify/assert
+   ```
+
+2. Write a test:
+   ```go
+   package main
+
+   import (
+       "testing"
+       "github.com/stretchr/testify/assert"
+   )
+
+   func Add(a, b int) int {
+       return a + b
+   }
+
+   func TestAdd(t *testing.T) {
+       result := Add(2, 3)
+       expected := 5
+       assert.Equal(t, expected, result, "They should be equal")
+   }
+   ```
+
+Run tests with:
+```bash
+go test
+```
+
+*Note that a common practice in GO is adding unit tests (`_test.go`) in the same directory/package where the code is located. This allows you to test the code independently of each other.* 
 
 ---
 ### Further Reading
