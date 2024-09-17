@@ -946,121 +946,121 @@ In Go, the relationship between **structs** and **interfaces** is foundational t
     ```
     Here, `printVehicleInfo` accepts any type that implements the `Vehicle` interface, so you can pass different struct types that implement `Vehicle` without changing the function.
 
-    ⚠️ **A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference** (used for larger data structs not exposed, i.e. not returned by functions):
-    ```go
-    package domain
+⚠️ **A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference** (used for larger data structs not exposed, i.e. not returned by functions):
+```go
+package domain
 
-    type BookingUser interface {
-        FirstName() string
-        LastName() string
-        Email() string
-        NumberOfTickets() uint8
-        IsValidInput(remainingTickets uint8, conferenceName string) bool
+type BookingUser interface {
+    FirstName() string
+    LastName() string
+    Email() string
+    NumberOfTickets() uint8
+    IsValidInput(remainingTickets uint8, conferenceName string) bool
+}
+
+type user struct {
+    firstName       string
+    lastName        string
+    email           string
+    numberOfTickets uint8
+}
+
+func NewBookingUser(firstName string, lastName string, email string, numberOfTickets uint8) BookingUser {
+    return &user{
+        firstName:       firstName,
+        lastName:        lastName,
+        email:           email,
+        numberOfTickets: numberOfTickets,
+    }
+}
+
+func (u *user) FirstName() string {
+    return u.firstName
+}
+func (u *user) LastName() string {
+    return u.lastName
+}
+func (u *user) Email() string {
+    return u.email
+}
+func (u *user) NumberOfTickets() uint8 {
+    return u.numberOfTickets
+}
+
+func (u *user) IsValidInput(remainingTickets uint8, conferenceName string) (vi bool) {
+    isValidUserName := len(u.firstName) >= 2 && len(u.lastName) >= 2
+    vi = true
+    if !isValidUserName {
+        fmt.Println("Please enter a valid name")
+        vi = false
     }
 
-    type user struct {
-        firstName       string
-        lastName        string
-        email           string
-        numberOfTickets uint8
+    isValidEmail := len(u.email) > 3 && strings.Contains(u.email, "@")
+    if !isValidEmail {
+        fmt.Println("Please enter a valid email address")
+        vi = false
     }
 
-    func NewBookingUser(firstName string, lastName string, email string, numberOfTickets uint8) BookingUser {
-        return &user{
-            firstName:       firstName,
-            lastName:        lastName,
-            email:           email,
-            numberOfTickets: numberOfTickets,
+    isValidTicket := u.numberOfTickets > 0
+    if !isValidTicket {
+        fmt.Println("Please enter a valid number of tickets")
+        vi = false
+    }
+
+    // validate avaibaility:
+    if u.numberOfTickets > remainingTickets {
+        fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
+        vi = false
+    }
+    return vi
+}
+```
+```go
+package main
+
+import (
+    // GO "internal" module:
+    "fmt"
+    "sync"
+    "time"
+
+    // Own module/GO external package:
+    "github.com/paguerre3/gocomp/common"
+    "github.com/paguerre3/gocomp/domain"
+)
+
+// package level variables:
+var (
+    remainingTickets uint8 = 30
+    bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
+    wg               sync.WaitGroup
+)
+
+const (
+    conferenceName       = "Go Conference"
+    totalTickets   uint8 = 50
+)
+
+func main() {
+    soldTickets := initConference()
+    common.DisplayBookings(bookings)
+
+    greetUsers(soldTickets)
+
+    // infinite loop for ==> for "true", i.e. for { }
+    // for remainingTickets > 0 { // loop with true false condition.
+    for {
+        // multiple returns are allowed in go
+        //userFirstName, userLastName, userEmail, userTickets := getUserInputs()
+        bookingUser := domain.NewBookingUser(getUserInputs())
+        if vi := bookingUser.IsValidInput(remainingTickets, conferenceName); !vi {
+            // continue to next iteration to try again:
+            continue
         }
+        // more code here
     }
-
-    func (u *user) FirstName() string {
-        return u.firstName
-    }
-    func (u *user) LastName() string {
-        return u.lastName
-    }
-    func (u *user) Email() string {
-        return u.email
-    }
-    func (u *user) NumberOfTickets() uint8 {
-        return u.numberOfTickets
-    }
-
-    func (u *user) IsValidInput(remainingTickets uint8, conferenceName string) (vi bool) {
-        isValidUserName := len(u.firstName) >= 2 && len(u.lastName) >= 2
-        vi = true
-        if !isValidUserName {
-            fmt.Println("Please enter a valid name")
-            vi = false
-        }
-
-        isValidEmail := len(u.email) > 3 && strings.Contains(u.email, "@")
-        if !isValidEmail {
-            fmt.Println("Please enter a valid email address")
-            vi = false
-        }
-
-        isValidTicket := u.numberOfTickets > 0
-        if !isValidTicket {
-            fmt.Println("Please enter a valid number of tickets")
-            vi = false
-        }
-
-        // validate avaibaility:
-        if u.numberOfTickets > remainingTickets {
-            fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
-            vi = false
-        }
-        return vi
-    }
-    ```
-    ```go
-    package main
-
-    import (
-        // GO "internal" module:
-        "fmt"
-        "sync"
-        "time"
-
-        // Own module/GO external package:
-        "github.com/paguerre3/gocomp/common"
-        "github.com/paguerre3/gocomp/domain"
-    )
-
-    // package level variables:
-    var (
-        remainingTickets uint8 = 30
-        bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
-        wg               sync.WaitGroup
-    )
-
-    const (
-        conferenceName       = "Go Conference"
-        totalTickets   uint8 = 50
-    )
-
-    func main() {
-        soldTickets := initConference()
-        common.DisplayBookings(bookings)
-
-        greetUsers(soldTickets)
-
-        // infinite loop for ==> for "true", i.e. for { }
-        // for remainingTickets > 0 { // loop with true false condition.
-        for {
-            // multiple returns are allowed in go
-            //userFirstName, userLastName, userEmail, userTickets := getUserInputs()
-            bookingUser := domain.NewBookingUser(getUserInputs())
-            if vi := bookingUser.IsValidInput(remainingTickets, conferenceName); !vi {
-                // continue to next iteration to try again:
-                continue
-            }
-            // more code here
-        }
-    }
-    ```	
+}
+```	
 
 ***Key Points:***
 
