@@ -28,6 +28,7 @@ Go language compendium
 - [Functional programming](#functional-programming)
 - [Generics](#generics)
 - [Variadic functions](#variadic-functions)
+- [Runes](#runes)
 
 
 ---
@@ -1367,11 +1368,11 @@ You can call it with any number of integers: `sum(1, 2, 3)`.
 
 
 ---
-# Reunes
+### Runes
 
 A **rune** is an alias for the `int32` type and **represents a Unicode code point**. Runes are used to handle characters beyond basic ASCII, **allowing Go to work with multilingual text and special symbols**.
 
-***Key Points:***
+**Key Points:**
 
 - A rune represents a single Unicode character.
 - Go strings are UTF-8 encoded, so indexing a string gives you a byte, not a rune.
@@ -1403,7 +1404,7 @@ func main() {
 }
 ```
 
-**Explanation:**
+***Explanation:***
 
 - `utf8.RuneCountInString(str)` counts the number of runes in the UTF-8 encoded string.
 - `utf8.DecodeRuneInString` reads one rune (character) at a time and returns the rune and its width in bytes. This is useful for iterating over multi-byte characters like "世界".
