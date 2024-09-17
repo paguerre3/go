@@ -1437,4 +1437,7 @@ Runes allow for easier manipulation of characters in a string.
 - [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
 - [GO blueprint](https://github.com/Melkeydev/go-blueprint)
 - [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
+- [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd-api)
+- [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-example)
 - [GO Standards](https://github.com/golang-standards/project-layout)
+
