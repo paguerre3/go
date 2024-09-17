@@ -871,6 +871,8 @@ wg.Wait()  // Wait for both goroutines to finish
 ```
 In this example, the program waits for both `goroutines` to complete before proceeding.
 
+***Note Defer is used to ensure that a function call is performed later in a program’s execution***, usually for purposes of cleanup. defer is often used where e.g. ensure and finally would be used in other languages.
+
 **Go is using, what's called "Green thread"**, i.e. an abstraction of an actual thread.
 
 | **Aspect**                | **`Goroutines`**                                           | **OS Threads**                                           |
