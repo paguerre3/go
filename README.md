@@ -592,49 +592,49 @@ func main() {
 1. **Local member:** 
 - Declaration **within function**, i.e. **Can be used** only within that function.
 - Declaration **within block**, i.e. **Cannot be used** only within block, e.g. `for`, `if-else`, etc.
-```go
-func GetBookingsByPeopleNames(bookings []string) []string {
-	ns := []string{} // ns is a local variable declared within "the function"
-	// this is valid as no resize is done in the slice (simply a slice iteration to display values instead or appending)
-	// but if there is a resize/update then a new array is built and changes won't be reflected until because a
-	// variable is in the Local Function Frame of the Memory Stack unless a "new return" is providid
-	// and then updating the package level variable (otherwise remove passing the slice as a reference
-	// so the local/shadowed variable problem is avoided):
-	for _, booking := range bookings {
-		// strings.Fields(booking):
-		// Fields splits the string s around each instance of one or more consecutive white space characters,
-		// as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
-		fields := strings.Fields(booking) // fields is a local variable declared within the "for" block
-		if len(fields) > 0 && fields[0] != "SOLD" {
-			ns = append(ns, fmt.Sprintf("%s %s", fields[1], fields[2]))
-		}
-	}
-	return ns
-}
-```
+    ```go
+    func GetBookingsByPeopleNames(bookings []string) []string {
+        ns := []string{} // ns is a local variable declared within "the function"
+        // this is valid as no resize is done in the slice (simply a slice iteration to display values instead or appending)
+        // but if there is a resize/update then a new array is built and changes won't be reflected until because a
+        // variable is in the Local Function Frame of the Memory Stack unless a "new return" is providid
+        // and then updating the package level variable (otherwise remove passing the slice as a reference
+        // so the local/shadowed variable problem is avoided):
+        for _, booking := range bookings {
+            // strings.Fields(booking):
+            // Fields splits the string s around each instance of one or more consecutive white space characters,
+            // as defined by unicode.IsSpace, returning a slice of substrings of s or an empty slice if s contains only white space.
+            fields := strings.Fields(booking) // fields is a local variable declared within the "for" block
+            if len(fields) > 0 && fields[0] != "SOLD" {
+                ns = append(ns, fmt.Sprintf("%s %s", fields[1], fields[2]))
+            }
+        }
+        return ns
+    }
+    ```
 
 2. **Package member:**
 - Declaration **outside all functions** in same module, i.e. ⚠️ **Can be used in all other files within the same package**.
-```go
-// package level variables:
-var (
-	remainingTickets uint8 = 30
-	bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
-)
+    ```go
+    // package level variables:
+    var (
+        remainingTickets uint8 = 30
+        bookings               = make([]string, 0, totalTickets) // len=0 (no elements), cap=50
+    )
 
-// package level function starts with lower case letter:
-func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
-	return totalTickets - remainingTickets
-}
-```	 
+    // package level function starts with lower case letter:
+    func calculateSoldTickets(remainingTickets uint8, totalTickets uint8) uint8 {
+        return totalTickets - remainingTickets
+    }
+    ```	 
 
 3. **Global member:**
 - Declaration **outside all functions & upper case 1st letter**, i.e. **Can be used everywhere across all packages** (and its files).
-```go
-func GetBookingsByPeopleNames(bookings []string) []string { 
-    // more code here 
-}
-```
+    ```go
+    func GetBookingsByPeopleNames(bookings []string) []string { 
+        // more code here 
+    }
+    ```
 
 ***Variable Scope is the region of a program where a defined variable can be accessed***
 
@@ -890,172 +890,177 @@ In this example, the program waits for both `goroutines` to complete before proc
 In Go, the relationship between **structs** and **interfaces** is foundational to the language’s approach to type systems and polymorphism.
 
 1. **Structs**:
-A **struct** is a collection of fields that can hold data. Structs are **used to define custom data types** that group related data together, e.g.:
-```go
-type Car struct {
-    brand string
-    year  int
-}
-```
-In the above example, `Car` is a struct with two fields, `brand` and `year`.
+
+    A **struct** is a collection of fields that can hold data. Structs are **used to define custom data types** that group related data together, e.g.:
+    ```go
+    type Car struct {
+        brand string
+        year  int
+    }
+    ```
+    In the above example, `Car` is a struct with two fields, `brand` and `year`.
 
 2. **Interfaces**:
-An **interface** is a type that **specifies a set of method signatures**. **"Any type" that implements these methods is said to "satisfy" the interface**. Unlike in other languages, ⚠️ **Go does not require you to explicitly declare that a type implements an interface**; if a type has all the methods the interface requires, it automatically satisfies the interface, e.g.:
-```go
-type Vehicle interface {
-    Drive() string
-}
-```
-Here, `Vehicle` is an interface that requires a `Drive()` method returning a string.
+
+    An **interface** is a type that **specifies a set of method signatures**. **"Any type" that implements these methods is said to "satisfy" the interface**. Unlike in other languages, ⚠️ **Go does not require you to explicitly declare that a type implements an interface**; if a type has all the methods the interface requires, it automatically satisfies the interface, e.g.:
+    ```go
+    type Vehicle interface {
+        Drive() string
+    }
+    ```
+    Here, `Vehicle` is an interface that requires a `Drive()` method returning a string.
 
 3. **Implementing Interfaces with Structs**:
-A **struct can implement an interface by defining methods that match the interface’s method signatures**. In Go, there's no need to use a keyword like `implements`; ⚠️ **it is done implicitly by providing the correct method signatures**, e.g.:
-```go
-func (c Car) Drive() string {
-    return "Driving a " + c.brand
-}
-```
-In this case, the `Car` struct implements the `Vehicle` interface by providing a `Drive` method. This allows `Car` to be treated as a `Vehicle`.
+
+    A **struct can implement an interface by defining methods that match the interface’s method signatures**. In Go, there's no need to use a keyword like `implements`; ⚠️ **it is done implicitly by providing the correct method signatures**, e.g.:
+    ```go
+    func (c Car) Drive() string {
+        return "Driving a " + c.brand
+    }
+    ```
+    In this case, the `Car` struct implements the `Vehicle` interface by providing a `Drive` method. This allows `Car` to be treated as a `Vehicle`.
 
 4. **Custom Instantiation**:
-You can create factory-like functions that return interfaces. **This allows the function to return different types that satisfy the interface, without the caller needing to know the specific type**.
-```go
-// Custom instantiation function that returns a Vehicle interface
-func NewCar(brand string) Vehicle {
-    return Car{brand: brand}
-}
-```
-In this example, `NewCar()` creates an instance of the `Car` struct and returns it as a `Vehicle`. Since `Car` implements the `Vehicle` interface, the returned type can be used in contexts where a `Vehicle` is expected, providing polymorphism.
+
+    You can create factory-like functions that return interfaces. **This allows the function to return different types that satisfy the interface, without the caller needing to know the specific type**.
+    ```go
+    // Custom instantiation function that returns a Vehicle interface
+    func NewCar(brand string) Vehicle {
+        return Car{brand: brand}
+    }
+    ```
+    In this example, `NewCar()` creates an instance of the `Car` struct and returns it as a `Vehicle`. Since `Car` implements the `Vehicle` interface, the returned type can be used in contexts where a `Vehicle` is expected, providing polymorphism.
 
 5. **Polymorphism**:
-**Polymorphism refers to the ability to treat different types as the same interface type**, allowing you to write more general and flexible code.
-```go
-func printVehicleInfo(v Vehicle) {
-    fmt.Println(v.Drive())
-}
 
-func main() {
-    myCar := NewCar("Tesla")
-    printVehicleInfo(myCar)  // Output: Driving a Tesla
-}
-```
-Here, `printVehicleInfo` accepts any type that implements the `Vehicle` interface, so you can pass different struct types that implement `Vehicle` without changing the function.
-
-⚠️ **A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference** (used for larger data structs not exposed, i.e. not returned by functions):
-```go
-package domain
-
-type BookingUser interface {
-	FirstName() string
-	LastName() string
-	Email() string
-	NumberOfTickets() uint8
-	IsValidInput(remainingTickets uint8, conferenceName string) bool
-}
-
-type user struct {
-	firstName       string
-	lastName        string
-	email           string
-	numberOfTickets uint8
-}
-
-func NewBookingUser(firstName string, lastName string, email string, numberOfTickets uint8) BookingUser {
-	return &user{
-		firstName:       firstName,
-		lastName:        lastName,
-		email:           email,
-		numberOfTickets: numberOfTickets,
-	}
-}
-
-func (u *user) FirstName() string {
-	return u.firstName
-}
-func (u *user) LastName() string {
-	return u.lastName
-}
-func (u *user) Email() string {
-	return u.email
-}
-func (u *user) NumberOfTickets() uint8 {
-	return u.numberOfTickets
-}
-
-func (u *user) IsValidInput(remainingTickets uint8, conferenceName string) (vi bool) {
-	isValidUserName := len(u.firstName) >= 2 && len(u.lastName) >= 2
-	vi = true
-	if !isValidUserName {
-		fmt.Println("Please enter a valid name")
-		vi = false
-	}
-
-	isValidEmail := len(u.email) > 3 && strings.Contains(u.email, "@")
-	if !isValidEmail {
-		fmt.Println("Please enter a valid email address")
-		vi = false
-	}
-
-	isValidTicket := u.numberOfTickets > 0
-	if !isValidTicket {
-		fmt.Println("Please enter a valid number of tickets")
-		vi = false
-	}
-
-	// validate avaibaility:
-	if u.numberOfTickets > remainingTickets {
-		fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
-		vi = false
-	}
-	return vi
-}
-```
-```go
-package main
-
-import (
-	// GO "internal" module:
-	"fmt"
-	"sync"
-	"time"
-
-	// Own module/GO external package:
-	"github.com/paguerre3/gocomp/common"
-	"github.com/paguerre3/gocomp/domain"
-)
-
-// package level variables:
-var (
-	remainingTickets uint8 = 30
-	bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
-	wg               sync.WaitGroup
-)
-
-const (
-	conferenceName       = "Go Conference"
-	totalTickets   uint8 = 50
-)
-
-func main() {
-	soldTickets := initConference()
-	common.DisplayBookings(bookings)
-
-	greetUsers(soldTickets)
-
-	// infinite loop for ==> for "true", i.e. for { }
-	// for remainingTickets > 0 { // loop with true false condition.
-	for {
-		// multiple returns are allowed in go
-		//userFirstName, userLastName, userEmail, userTickets := getUserInputs()
-		bookingUser := domain.NewBookingUser(getUserInputs())
-		if vi := bookingUser.IsValidInput(remainingTickets, conferenceName); !vi {
-			// continue to next iteration to try again:
-			continue
-		}
-        // more code here
+    **Polymorphism refers to the ability to treat different types as the same interface type**, allowing you to write more general and flexible code.
+    ```go
+    func printVehicleInfo(v Vehicle) {
+        fmt.Println(v.Drive())
     }
-}
-```	
+
+    func main() {
+        myCar := NewCar("Tesla")
+        printVehicleInfo(myCar)  // Output: Driving a Tesla
+    }
+    ```
+    Here, `printVehicleInfo` accepts any type that implements the `Vehicle` interface, so you can pass different struct types that implement `Vehicle` without changing the function.
+
+    ⚠️ **A more complete and efficient example using Interface passed as value with Struct instantiation passed as reference** (used for larger data structs not exposed, i.e. not returned by functions):
+    ```go
+    package domain
+
+    type BookingUser interface {
+        FirstName() string
+        LastName() string
+        Email() string
+        NumberOfTickets() uint8
+        IsValidInput(remainingTickets uint8, conferenceName string) bool
+    }
+
+    type user struct {
+        firstName       string
+        lastName        string
+        email           string
+        numberOfTickets uint8
+    }
+
+    func NewBookingUser(firstName string, lastName string, email string, numberOfTickets uint8) BookingUser {
+        return &user{
+            firstName:       firstName,
+            lastName:        lastName,
+            email:           email,
+            numberOfTickets: numberOfTickets,
+        }
+    }
+
+    func (u *user) FirstName() string {
+        return u.firstName
+    }
+    func (u *user) LastName() string {
+        return u.lastName
+    }
+    func (u *user) Email() string {
+        return u.email
+    }
+    func (u *user) NumberOfTickets() uint8 {
+        return u.numberOfTickets
+    }
+
+    func (u *user) IsValidInput(remainingTickets uint8, conferenceName string) (vi bool) {
+        isValidUserName := len(u.firstName) >= 2 && len(u.lastName) >= 2
+        vi = true
+        if !isValidUserName {
+            fmt.Println("Please enter a valid name")
+            vi = false
+        }
+
+        isValidEmail := len(u.email) > 3 && strings.Contains(u.email, "@")
+        if !isValidEmail {
+            fmt.Println("Please enter a valid email address")
+            vi = false
+        }
+
+        isValidTicket := u.numberOfTickets > 0
+        if !isValidTicket {
+            fmt.Println("Please enter a valid number of tickets")
+            vi = false
+        }
+
+        // validate avaibaility:
+        if u.numberOfTickets > remainingTickets {
+            fmt.Println("Sorry, we only have", remainingTickets, "tickets left for", conferenceName)
+            vi = false
+        }
+        return vi
+    }
+    ```
+    ```go
+    package main
+
+    import (
+        // GO "internal" module:
+        "fmt"
+        "sync"
+        "time"
+
+        // Own module/GO external package:
+        "github.com/paguerre3/gocomp/common"
+        "github.com/paguerre3/gocomp/domain"
+    )
+
+    // package level variables:
+    var (
+        remainingTickets uint8 = 30
+        bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
+        wg               sync.WaitGroup
+    )
+
+    const (
+        conferenceName       = "Go Conference"
+        totalTickets   uint8 = 50
+    )
+
+    func main() {
+        soldTickets := initConference()
+        common.DisplayBookings(bookings)
+
+        greetUsers(soldTickets)
+
+        // infinite loop for ==> for "true", i.e. for { }
+        // for remainingTickets > 0 { // loop with true false condition.
+        for {
+            // multiple returns are allowed in go
+            //userFirstName, userLastName, userEmail, userTickets := getUserInputs()
+            bookingUser := domain.NewBookingUser(getUserInputs())
+            if vi := bookingUser.IsValidInput(remainingTickets, conferenceName); !vi {
+                // continue to next iteration to try again:
+                continue
+            }
+            // more code here
+        }
+    }
+    ```	
 
 ***Key Points:***
 
@@ -1103,80 +1108,80 @@ Go uses a unique approach to error handling compared to traditional exception-ba
 
 1. **Error Type:**
 
-Go has a built-in **`error`** type, which is an interface that can be implemented to describe an error. It typically returns `nil` if there’s no error, or an instance of an error if something goes wrong, i.e.:
-```go
-type error interface {
-    Error() string
-}
-```
+    Go has a built-in **`error`** type, which is an interface that can be implemented to describe an error. It typically returns `nil` if there’s no error, or an instance of an error if something goes wrong, i.e.:
+    ```go
+    type error interface {
+        Error() string
+    }
+    ```
 
 2. **Returning Errors:**
 
-**Functions often return a value and an error**. The caller is responsible for checking if the error is `nil` to determine if the operation succeeded, e.g.:
-```go
-func divide(a, b int) (int, error) {
-    if b == 0 {
-        return 0, fmt.Errorf("cannot divide by zero")
+    **Functions often return a value and an error**. The caller is responsible for checking if the error is `nil` to determine if the operation succeeded, e.g.:
+    ```go
+    func divide(a, b int) (int, error) {
+        if b == 0 {
+            return 0, fmt.Errorf("cannot divide by zero")
+        }
+        return a / b, nil
     }
-    return a / b, nil
-}
 
-result, err := divide(10, 0)
-if err != nil {
-    fmt.Println("Error:", err)
-} else {
-    fmt.Println("Result:", result)
-}
-```
+    result, err := divide(10, 0)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Println("Result:", result)
+    }
+    ```
 
 3. **Error Wrapping (Go 1.13+):**
 
-Go 1.13 introduced **error wrapping** with the `%w` verb in the `fmt.Errorf` function, which allows errors to be wrapped and unwrapped for better context and debugging.
-```go
-err := fmt.Errorf("an error occurred: %w", originalErr)
-```
-The `errors.Unwrap` function can be used to retrieve the original error, and `errors.Is` checks if a specific error is in the error chain.
+    Go 1.13 introduced **error wrapping** with the `%w` verb in the `fmt.Errorf` function, which allows errors to be wrapped and unwrapped for better context and debugging.
+    ```go
+    err := fmt.Errorf("an error occurred: %w", originalErr)
+    ```
+    The `errors.Unwrap` function can be used to retrieve the original error, and `errors.Is` checks if a specific error is in the error chain.
 
 4. **Custom Errors:**
 
-You can create custom error types by implementing the `Error()` method for more specific error handling, e.g.:
-```go
-type CustomError struct {
-    Msg string
-}
+    You can create custom error types by implementing the `Error()` method for more specific error handling, e.g.:
+    ```go
+    type CustomError struct {
+        Msg string
+    }
 
-func (e *CustomError) Error() string {
-    return e.Msg
-}
+    func (e *CustomError) Error() string {
+        return e.Msg
+    }
 
-func doSomething() error {
-    return &CustomError{"something went wrong"}
-}
+    func doSomething() error {
+        return &CustomError{"something went wrong"}
+    }
 
-err := doSomething()
-if err != nil {
-    fmt.Println(err)
-}
-```
+    err := doSomething()
+    if err != nil {
+        fmt.Println(err)
+    }
+    ```
 
 5. **Panic and Recover:**
 
-Go provides the **`panic`** and **`recover`** functions **for handling unrecoverable errors or exceptional situations**. However, they are **not used for general error handling but rather for catastrophic failures or conditions that should halt the program**.
+    Go provides the **`panic`** and **`recover`** functions **for handling unrecoverable errors or exceptional situations**. However, they are **not used for general error handling but rather for catastrophic failures or conditions that should halt the program**.
 
 - **Panic**: Immediately stops the program and starts the process of unwinding the stack.
 - **Recover**: Used within a deferred function to regain control of a panicking `goroutine`.
-```go
-func riskyOperation() {
-    defer func() {
-        if r := recover(); r != nil {
-            fmt.Println("Recovered from panic:", r)
-        }
-    }()
-    panic("Something went terribly wrong!")
-}
+    ```go
+    func riskyOperation() {
+        defer func() {
+            if r := recover(); r != nil {
+                fmt.Println("Recovered from panic:", r)
+            }
+        }()
+        panic("Something went terribly wrong!")
+    }
 
-riskyOperation()
-```
+    riskyOperation()
+    ```
 
 6. **Best Practices:**
 
@@ -1297,7 +1302,7 @@ While Go is not a purely functional language, it provides enough tools to enable
 
 ---
 ### Generics
-Generics in Go were introduced in Go 1.18, allowing developers to write functions, types, and methods that can work with any type. Here's a brief summary:
+Generics in Go were introduced in Go 1.18, allowing developers to **write functions, types, and methods that can work with any type**.
 
 **Key Concepts:**
 
