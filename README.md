@@ -27,6 +27,7 @@ Go language compendium
 - [Error handling](#error-handling)
 - [Functional programming](#functional-programming)
 - [Generics](#generics)
+- [Variadic functions](#variadic-functions)
 
 
 ---
@@ -1340,3 +1341,21 @@ Generics in Go were introduced in Go 1.18, allowing developers to write function
 - No **higher-kinded types** (types that take type parameters themselves).
 
 Generics in Go offer more flexibility while keeping the language's simplicity and performance.
+
+
+---
+### Variadic Functions
+
+A variadic function **can take a variable number of arguments of the same type**. It uses `...` before the type of the last parameter to denote that it accepts multiple arguments. E.g.:
+```go
+func sum(nums ...int) int {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    return total
+}
+```
+You can call it with any number of integers: `sum(1, 2, 3)`.
+- **Arguments** are treated as a slice inside the function.
+- It can still have regular parameters before the variadic parameter.
