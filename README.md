@@ -1474,7 +1474,9 @@ Run tests with:
 go test
 ```
 
-*Note that a common practice in GO is adding unit tests (`_test.go`) in the same directory/package where the code is located. This allows you to test the code independently of each other.* 
+⚠️ *Note that a common practice in GO is adding unit tests (`_test.go`) in the same directory/package where the code is located. 
+This allows you to test the package code independently of each other when needed or test everything at once without setting a common folder.* 
+
 
 ---
 ### Further Reading
