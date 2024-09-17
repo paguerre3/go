@@ -741,17 +741,23 @@ import (
 
 func sum(a int, b int, ch chan int) {
     result := a + b
-    ch <- result  // Send result to the channel
+    // Send result to the channel
+    // (this technique avoids adding `Delta` with a `WaitGroup` and also doing `defer Done` for signaling that the `goroutine` is complete)
+    ch <- result
 }
 
 func main() {
     ch := make(chan int)  // Create a channel for int values
+    // Closing a channel is optional as it doesn't free resources, instead they are garbage collected 
+    // (closing channel should only done when it’s important to signal to receivers that no more data will be sent)
+    defer close(ch)
 
     // Start two concurrent goroutines
     go sum(2, 3, ch)
     go sum(5, 7, ch)
 
     // Receive/obtain result from chan and print the results from both goroutines
+    // (no need of using a `WaitGroup Wait` as <-c during consumption is a blocking wait)
     result1 := <-ch
     result2 := <-ch
 
@@ -828,6 +834,7 @@ Here, `select` listens to both channels, and ⚠️ **whichever one receives a m
 - **Channels** provide a way for `goroutines` to communicate and synchronize.
 - **Unbuffered channels** require **simultaneous sending and receiving**, while **buffered channels** can **store values**.
 - The `select` statement is used **for multiplexing channels**, allowing you to wait for multiple channel operations concurrently.
+- **Closing a channel is optional** and should be **done when it’s important to signal to receivers that no more data will be sent**. Closing should be avoided when multiple senders are involved, and it's unnecessary if the receiver doesn't care about the end of transmission. **Closing a channel does not free resources**, i.e. channels are garbage collected when they are no longer referenced, so closing them is not necessary for resource cleanup. **Only the sender should close the channel**, i.e. it’s the responsibility of the goroutine that sends values to close the channel and receivers should not attempt to close the channel, as this would cause a runtime panic.
 
 **Concurrency and Parallelism** in terms of CPU cores:
 

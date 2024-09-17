@@ -16,6 +16,8 @@ var (
 	remainingTickets uint8 = 30
 	bookings               = make([]domain.BookingUser, 0, totalTickets) // len=0 (initial size), cap=50
 	wg               sync.WaitGroup
+	//using Channel of ticket string doesn't require adding deltas, defer and waiting for done, i.e:
+	//ch               = make(chan string)
 )
 
 const (
@@ -24,6 +26,9 @@ const (
 )
 
 func main() {
+	// Closing channel is optional as it doesn't free resources, instead they are garbage collected
+	// (closing channel should only done when it’s important to signal to receivers that no more data will be sent)
+	//defer close(ch)
 	soldTickets := initConference()
 	common.DisplayBookings(bookings)
 
@@ -41,6 +46,7 @@ func main() {
 		}
 
 		bookTickets(bookingUser, soldTickets)
+		// using a chan and passing the result doesn't require Add delta, i.e. simply add the result to the channel inside the goroutine:
 		wg.Add(1)
 		go sendTicket(bookingUser)
 		soldTickets = calculateSoldTickets(remainingTickets, totalTickets)
@@ -56,6 +62,7 @@ func main() {
 		}
 	}
 	fmt.Println("Waiting until all e-mails are sent...")
+	// using channel doesn't require waiting, i.e. <-c is a blocking wait while obtaining the value from the channel:
 	wg.Wait()
 	fmt.Println("Bye!")
 }
@@ -186,10 +193,12 @@ func getUserInputs() (string, string, string, uint8) {
 }
 
 func sendTicket(bu domain.BookingUser) {
-	defer wg.Done() // defer executes at the end of teh function always
+	defer wg.Done() // defer executes at the end of the function always (using a chan and passing the result doesn't require defer)
 	ticket := fmt.Sprintf("%d tickets for %s %s", bu.NumberOfTickets(), bu.FirstName(), bu.LastName())
 	fmt.Printf(">>>Sending ticket:\n %s \nto email address %s\n", ticket, bu.Email())
 	// simulates time of sending an email:
 	time.Sleep(30 * time.Second)
 	fmt.Printf("<<<Ticket sent to email %s!\n", bu.Email())
+	// using a chan and passing the result doesn't require defer, i.e. simply add the result to the channel:
+	// ch <- ticket
 }
