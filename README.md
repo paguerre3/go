@@ -29,7 +29,7 @@ Go language compendium
 - [Generics](#generics)
 - [Variadic functions](#variadic-functions)
 - [Runes](#runes)
-
+- [Further Reading](#further-reading)
 
 ---
 ### Why Go?
@@ -1427,3 +1427,14 @@ Rune: 界, starts at byte position 10, width: 3 bytes
 ```
 
 Runes allow for easier manipulation of characters in a string.
+
+
+---
+### Further Reading
+
+- [GO by Example](https://gobyexample.com/)
+- [Effective GO](https://go.dev/doc/effective_go)
+- [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
+- [GO blueprint](https://github.com/Melkeydev/go-blueprint)
+- [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
+- [GO Standards](https://github.com/golang-standards/project-layout)
