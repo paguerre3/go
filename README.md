@@ -1477,6 +1477,76 @@ go test
 ⚠️ *Note that a common practice in GO is adding unit tests (`_test.go`) in the same directory/package where the code is located. 
 This allows you to test the package code independently of each other when needed or test everything at once without setting a common folder.* 
 
+**Test method naming and best practices ensuring readability, clarity, and organization:**
+
+1. **Prefix with `Test`**:
+   - All test functions should start with `Test` followed by a descriptive name for the functionality being tested.
+   - This is required by Go's testing framework to recognize and execute the function as a test. E.g.:
+   ```go
+   func TestCalculateTotal(t *testing.T) { ... }
+   ```
+
+2. **Descriptive Names**:
+   - Use clear, descriptive names that explain what the test is checking. The name should reflect the function and the specific case being tested.
+   - Consider the pattern `TestFunctionName_StateUnderTest_ExpectedBehavior`. E.g.:
+   ```go
+   func TestAdd_PositiveNumbers_ReturnsSum(t *testing.T) { ... }
+   ```
+
+3. **Separate Test Cases by Functionality**:
+   - Split tests by functionality or behavior to avoid clutter and improve clarity. For example, if you're testing different edge cases, it's better to have multiple test functions instead of one large one. E.g.:
+   ```go
+   func TestAdd_Zero_ReturnsSameNumber(t *testing.T) { ... }
+   func TestAdd_NegativeNumbers_ReturnsSum(t *testing.T) { ... }
+   ```
+
+4. **Table-Driven Tests**:
+   - For **functions that need to be tested with "many" different inputs, use table-driven tests**. These are tests that loop over a set of test cases defined in a table (slice of structs), making the code more concise and maintainable. E.g.:
+   ```go
+   func TestAdd(t *testing.T) {
+       tests := []struct {
+           name     string
+           a, b     int
+           expected int
+       }{
+           {"Add two positives", 2, 3, 5},
+           {"Add zero and number", 0, 4, 4},
+           {"Add two negatives", -2, -3, -5},
+       }
+
+       for _, tt := range tests {
+           t.Run(tt.name, func(t *testing.T) {
+               result := Add(tt.a, tt.b)
+               if result != tt.expected {
+                   t.Errorf("expected %d, got %d", tt.expected, result)
+               }
+           })
+       }
+   }
+   ```
+
+5. **Use `t.Run` for Subtests**:
+   - **When testing multiple scenarios for the same function, use `t.Run` to organize subtests**. This makes it easier to see which test cases passed or failed and helps in debugging. E.g.:
+   ```go
+   func TestMultiply(t *testing.T) {
+       t.Run("Positive numbers", func(t *testing.T) {
+           result := Multiply(2, 3)
+           if result != 6 {
+               t.Errorf("expected 6, got %d", result)
+           }
+       })
+
+       t.Run("Negative numbers", func(t *testing.T) {
+           result := Multiply(-2, 3)
+           if result != -6 {
+               t.Errorf("expected -6, got %d", result)
+           }
+       })
+   }
+   ```
+
+By following these conventions, your tests will be clearer, easier to maintain, and more reliable.
+
 
 ---
 ### Further Reading
