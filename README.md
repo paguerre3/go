@@ -1633,15 +1633,15 @@ Go templates are **highly efficient for generating dynamic content in web applic
 - [Effective GO](https://go.dev/doc/effective_go)
 - [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
 
-**Blockchain:**
-- [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
-
 **Domain Driven Design:**
 - [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd)
 - [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-api)
 
 **Library and Docker:**
 - [Library client example](https://github.com/paguerre3/faccounts)
+
+**Blockchain:**
+- [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
 
 **Tools & Frameworks:**
 - [GO Kit as a set of packages and best practices for building microservices](https://github.com/go-kit/kit)
