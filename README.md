@@ -1628,19 +1628,26 @@ Go templates are **highly efficient for generating dynamic content in web applic
 ---
 ### Further Reading
 
+**GO Language:**
 - [GO by Example](https://gobyexample.com/)
 - [Effective GO](https://go.dev/doc/effective_go)
 - [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
-- [GO blueprint](https://github.com/Melkeydev/go-blueprint)
 
+**Blockchain:**
 - [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
 
+**Domain Driven Design:**
 - [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd)
 - [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-api)
+
+**Library and Docker:**
 - [Library client example](https://github.com/paguerre3/faccounts)
 
+**Tools & Frameworks:**
 - [GO Kit as a set of packages and best practices for building microservices](https://github.com/go-kit/kit)
 - [Wire for dependency injection](https://github.com/google/wire)
 - [Watermill for working efficiently with message streams](https://github.com/ThreeDotsLabs/watermill)
+- [GO blueprint to spin up a Go project with the corresponding structure](https://github.com/Melkeydev/go-blueprint)
 
+**Code Organization:**
 - [GO Standards](https://github.com/golang-standards/project-layout)
