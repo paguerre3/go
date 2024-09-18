@@ -30,6 +30,7 @@ Go language compendium
 - [Variadic functions](#variadic-functions)
 - [Runes](#runes)
 - [Testing](#testing)
+- [Templates](#templates)
 - [Further Reading](#further-reading)
 
 ---
@@ -1556,6 +1557,75 @@ By following these conventions, your tests will be clearer, easier to maintain, 
 
 
 ---
+### Templates
+
+**Templates** are a powerful feature, **allow generating dynamic content (such as HTML or text files) by combining static text with dynamic data**. Go templates come in two main forms: **text templates** (used for generating plain text) and **HTML templates** (specifically designed for safe HTML generation). Both types are part of Go's `text/template` and `html/template` packages.
+
+**Key Concepts:**
+
+1. **Template Definition**:
+   Templates are defined using `{{` and `}}` as delimiters. Inside these delimiters, you can add variables, expressions, and functions to manipulate the template data.
+
+2. **Variables**:
+   - Variables can be passed to templates as a `map` or a `struct`. You access them using dot notation. For example, if your data contains `Person.Name`, you can render it with `{{ .Name }}`.
+   - You can declare variables within the template using `{{ $var := ... }}`.
+
+3. **Actions**:
+   Actions are the commands that modify or access data within templates:
+   - `{{ . }}`: Refers to the root object passed to the template.
+   - `{{ .Field }}`: Accesses a field or method of a struct.
+   - `{{ if }}`, `{{ else }}`: Conditional logic.
+   - `{{ range }}`: Loops over arrays, slices, or maps.
+   - `{{ with }}`: Modifies the dot (.) to a new scope for a block.
+   - `{{ block }}`: Defines a block that can be overridden by other templates.
+
+4. **Functions**:
+   Go templates have many built-in functions such as `len`, `index`, `eq`, `and`, `or`, etc. You can also register custom functions in your Go code and use them in templates.
+
+5. **Pipelines**:
+   Go templates support pipelines (`|`) to chain the output of one function into the input of another. Example: `{{ .Name | printf "%q" }}`.
+
+6. **Template Inheritance (HTML Templates)**:
+   HTML templates allow for inheritance by using `{{ template "name" . }}`. This enables you to define base templates and override specific sections in child templates.
+
+7. **Security (HTML Templates)**:
+   The `html/template` package automatically escapes content to prevent Cross-Site Scripting (XSS) attacks. You can mark content as safe using the `html` or `js` functions if necessary.
+
+*Here’s a basic example of a Go HTML template:*
+```go
+package main
+
+import (
+	"html/template"
+	"os"
+)
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+func main() {
+	tmpl := template.Must(template.New("example").Parse(`
+		<h1>Hello, {{.Name}}!</h1>
+		<p>You are {{.Age}} years old.</p>
+	`))
+
+	data := Person{Name: "Alice", Age: 30}
+	tmpl.Execute(os.Stdout, data)
+}
+```
+
+This will produce:
+```html
+<h1>Hello, Alice!</h1>
+<p>You are 30 years old.</p>
+```
+
+Go templates are **highly efficient for generating dynamic content in web applications, configuration files, or any text-based output**.
+
+
+---
 ### Further Reading
 
 - [GO by Example](https://gobyexample.com/)
@@ -1563,7 +1633,7 @@ By following these conventions, your tests will be clearer, easier to maintain, 
 - [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
 - [GO blueprint](https://github.com/Melkeydev/go-blueprint)
 - [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
-- [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd-api)
-- [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-example)
+- [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd)
+- [DDD example #2 in GO (simplified)](https://github.com/paguerre3/go-ddd-api)
 - [Library client example](https://github.com/paguerre3/faccounts)
 - [GO Standards](https://github.com/golang-standards/project-layout)
