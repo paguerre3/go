@@ -1640,8 +1640,10 @@ Go templates are **highly efficient for generating dynamic content in web applic
 **Library and Docker:**
 - [Library client example](https://github.com/paguerre3/faccounts)
 
-**Blockchain:**
-- [Building a Blockchain in GO](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
+**Blockchain and Cloud Patterns/Interviews:**
+- [Building a Blockchain in GO](https://www.youtube.com/watch?v=jzmIxoiFBW0&list=PL4pLiB9n8GE3UTECkQaXpGUd0kTaXVhAf&index=1)
+- [Building a Blockchain in GO (simplified approach)](https://www.youtube.com/playlist?list=PLJbE2Yu2zumC5QE39TQHBLYJDB2gfFE5Q)
+- [Building a Blockchain in GO (complete BC code plus Cloud design patterns summary/interviews)](https://github.com/paguerre3/gobc)
 
 **Tools & Frameworks:**
 - [GO Kit as a set of packages and best practices for building microservices](https://github.com/go-kit/kit)
