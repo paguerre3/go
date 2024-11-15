@@ -1765,6 +1765,7 @@ Go templates are **highly efficient for generating dynamic content in web applic
 - [GO by Example](https://gobyexample.com/)
 - [Effective GO](https://go.dev/doc/effective_go)
 - [From Beginner to Senior](https://www.bytesizego.com/blog/learning-golang-2024)
+- [Learn Go with tests](https://github.com/quii/learn-go-with-tests)
 
 **Domain Driven Design:**
 - [DDD example #1 in GO (complete)](https://github.com/paguerre3/go-ddd)
