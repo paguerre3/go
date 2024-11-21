@@ -1785,6 +1785,7 @@ Go templates are **highly efficient for generating dynamic content in web applic
 - [Wire for dependency injection](https://github.com/google/wire)
 - [Watermill for working efficiently with message streams](https://github.com/ThreeDotsLabs/watermill)
 - [GO blueprint to spin up a Go project with the corresponding structure](https://github.com/Melkeydev/go-blueprint)
+- [Dependency injection and middleware](https://github.com/justinas/alice)
 
 **Code Organization:**
 - [GO Standards](https://github.com/golang-standards/project-layout)
