@@ -790,14 +790,14 @@ They are **"useful when you want to decouple the sender and receiver goroutines"
 allowing the sender to continue execution up to the buffer capacity even 
 **if the receiver isn't immediately ready to receive.**
 
-*** Creating a Buffered Channel ***
+**Creating a Buffered Channel**
 
 You specify the buffer capacity when creating the channel using the `make` function:
 ```go
 ch := make(chan int, 3) // Buffered channel with a capacity of 3
 ```
 
-*** How Buffered Channels Work ***
+**How Buffered Channels Work**
 
 - **Sending to a Buffered Channel**:
   - The `send` operation (`ch <- value`) adds the value to the channel buffer if there's space.
@@ -807,7 +807,7 @@ ch := make(chan int, 3) // Buffered channel with a capacity of 3
   - The `receive` operation (`value := <-ch`) retrieves a value from the channel buffer if it's not empty.
   - If the buffer is empty, the `receive` operation blocks until a value is available.
 
-*** Example ***
+***Example***
 
 ```go
 package main
@@ -828,7 +828,7 @@ func main() {
 }
 ```
 
-*** Key Points ***
+**Key Points**
 
 1. **Non-blocking up to Capacity**:
    Sending to a buffered channel is non-blocking only while the buffer has space.
